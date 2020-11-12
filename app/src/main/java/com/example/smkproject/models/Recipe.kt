@@ -1,14 +1,19 @@
 package com.example.smkproject.models
 
-import java.sql.Time
+import java.text.SimpleDateFormat
+import java.util.*
 
-class Recipe(_title: String, _describ: String, _time: Time) {
+
+class Recipe(_title: String, _describ: String, _date: Date) {
     var title: String
     var describ: String
-    val time: Time
+    val dateTime: String
     init{
         title = _title
         describ = _describ
-        time = _time
+        val dateFormat = SimpleDateFormat(
+            "dd-MM-yyyy HH:mm:ss"
+        )
+        dateTime = dateFormat.format(_date)
     }
 }

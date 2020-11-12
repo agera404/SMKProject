@@ -1,5 +1,7 @@
 package com.example.smkproject
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -20,10 +22,23 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_recipe)
 
+        //Обрабатываем события OnClick кнопки backHomeButton
+        backHomeButton.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(v: View?){
+                isCheckRecipe()
+                presenter.saveRecipe(title, describ)
+                presenter.onBack()
+            }
+
+            })
+
         //слушаем события titleRecipeTextView
         titleRecipeTextView.addTextChangedListener(object : TextWatcher {
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                title = titleRecipeTextView.text.toString()
+
+            }
 
             override fun beforeTextChanged(s: CharSequence, start: Int,
                                            count: Int, after: Int) {
@@ -36,7 +51,10 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
         //слушаем события describRecipeTextView
         describRecipeTextView.addTextChangedListener(object : TextWatcher {
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+
+                describ = describRecipeTextView.text.toString()
+            }
 
             override fun beforeTextChanged(s: CharSequence, start: Int,
                                            count: Int, after: Int) {
@@ -48,19 +66,19 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
         })
     }
 
-    override fun onBackHomeScreen(view: View) {
-        saveRecipe()
-        presenter.onBack()
+    override fun getContex(): Context {
+        return this@AddRecipeActivity
     }
 
-    override fun saveRecipe() {
-        title = titleRecipeTextView.text.toString()
-        describ = describRecipeTextView.text.toString()
-        presenter.saveRecipe(title, describ)
+
+    override fun isCheckRecipe(): Boolean {
+        if (title.length<0) title="Новый рецепт"
+        return true;
     }
+
 
     override fun navigateTo(target: Class<*>) {
-        TODO("Not yet implemented")
+        startActivity(Intent(this, target))
     }
 
 

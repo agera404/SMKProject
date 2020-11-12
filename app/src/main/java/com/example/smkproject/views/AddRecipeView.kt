@@ -1,8 +1,10 @@
 package com.example.smkproject.views
 
-import android.view.View
+import android.content.Context
+import com.example.smkproject.common.ViewNavigator
 
-interface AddRecipeView : ViewNavigator{
-    fun onBackHomeScreen(view: View)
-    fun saveRecipe()
+interface AddRecipeView : ViewNavigator {
+    fun getContex(): Context
+
+    fun isCheckRecipe(): Boolean
 }

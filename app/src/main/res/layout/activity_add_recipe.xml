@@ -10,10 +10,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <Button
+            android:id="@+id/backHomeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/back_home_screen"
-            android:onClick="onBackHomeScreen"/>
+            />
         <EditText
             android:id="@+id/titleRecipeTextView"
             android:layout_width="match_parent"

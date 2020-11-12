@@ -5,8 +5,7 @@ import com.example.smkproject.views.MainView
 
 class MainPresenter (var view: MainView){
 
-    fun onAddNewRecipe(){
-        view.navigateTo(AddRecipeActivity::class.java)
-
+    fun onGoAddRecipeView(){
+       view.navigateTo(AddRecipeActivity::class.java)
     }
 }

@@ -1,10 +1,8 @@
 package com.example.smkproject.views
 
 import android.view.View
+import com.example.smkproject.common.ViewNavigator
 
-interface MainView : ViewNavigator{
-    fun onAddNewRecipe(view: View)
-}
-interface ViewNavigator {
-    fun navigateTo(target: Class<*>)
+interface MainView : ViewNavigator {
+
 }
