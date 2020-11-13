@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddRecipeActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <Button
-            android:id="@+id/backHomeButton"
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/back_home_screen"
-            />
+            android:layout_height="58dp"
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"/>
         <EditText
             android:id="@+id/titleRecipeTextView"
             android:layout_width="match_parent"

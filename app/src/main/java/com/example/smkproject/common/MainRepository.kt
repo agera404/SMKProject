@@ -24,7 +24,33 @@ class MainRepository {
 
 
     }
-    fun loadRecipes(context: Context){
+    fun loadRecipes(context: Context): ArrayList<Recipe>{
+        var recipes: ArrayList<Recipe> = ArrayList()
+        dbHelper = DBHelper(context)
+        val database = dbHelper!!.writableDatabase
+        val contentValues = ContentValues()
+        val cursor: Cursor =
+            database.query(DBHelper.TABLE_CONTACTS, null, null, null, null, null, null)
+        if (cursor.moveToFirst()) {
+            val idIndex = cursor.getColumnIndex(DBHelper.KEY_ID)
+            val titleIndex = cursor.getColumnIndex(DBHelper.KEY_TITLE)
+            val describIndex = cursor.getColumnIndex(DBHelper.KEY_DESCRIB)
+            val dateTimeIndex = cursor.getColumnIndex(DBHelper.KEY_DATETIME)
+
+            do {
+                recipes.add(Recipe(
+                     cursor.getInt(titleIndex).toString(),
+                     cursor.getInt(describIndex).toString(),
+                     cursor.getInt(dateTimeIndex).toString()))
+
+            } while (cursor.moveToNext())
+        } else Log.d("mLog", "0 rows")
+
+        cursor.close()
+
+        return recipes
+    }
+    fun loadRecipesInLog(context: Context){
         dbHelper = DBHelper(context)
         val database = dbHelper!!.writableDatabase
         val contentValues = ContentValues()
