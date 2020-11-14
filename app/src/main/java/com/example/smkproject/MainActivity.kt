@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), MainView {
             } else {
                 textView.text = Html.fromHtml(text);
             }
+            linLay.addView(textView)
             return linLay
         }
 
