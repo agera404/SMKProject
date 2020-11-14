@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.presenters.MainPresenter
 import com.example.smkproject.views.MainView
+import kotlinx.android.synthetic.main.activity_add_recipe.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -23,7 +24,11 @@ class MainActivity : AppCompatActivity(), MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recipes= presenter.loadRecipe()
-        newRecipeButton.setOnClickListener(object : View.OnClickListener{
+        showRecipe()
+
+        //create new recipe button
+        main_toolbar.setNavigationIcon(R.drawable.ic_add_recipe)
+        main_toolbar.setNavigationOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?){
                 presenter.goAddRecipeView()
             }
@@ -57,7 +62,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
             for (recipe in recipes){
                 val child = createLinLayRecipe(recipe)
-                rootLinLay.addView(child,countChild)
+                rootLinLay.addView(child)
             }
 
         }
@@ -69,15 +74,12 @@ class MainActivity : AppCompatActivity(), MainView {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (data == null) {
-            return
-        }
-        this.recipes = data.getSerializableExtra("recipes") as ArrayList<Recipe>
-
+        recipes= presenter.loadRecipe()
+        showRecipe()
     }
 
     override fun navigateTo(target: Class<*>) {
-        startActivityForResult(intent, 1)
+        startActivityForResult(Intent(this, target), 1)
     }
 
     override fun getContex(): Context {

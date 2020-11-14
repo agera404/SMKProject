@@ -26,10 +26,7 @@ class AddRecipePresenter (var view: AddRecipeView){
     fun onBack(){
         val mainRepository = MainRepository()
         mainRepository.loadRecipesInLog(view.getContex())
-
-        var recipes = mainRepository.loadRecipes(view.getContex())
         val intent = Intent(view.getContex(), MainActivity::class.java)
-        intent.putExtra("recipes", recipes)
         view.setResult(intent)
         view.navigateTo(MainActivity::class.java)
     }

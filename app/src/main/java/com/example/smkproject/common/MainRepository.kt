@@ -39,9 +39,9 @@ class MainRepository {
 
             do {
                 recipes.add(Recipe(
-                     cursor.getInt(titleIndex).toString(),
-                     cursor.getInt(describIndex).toString(),
-                     cursor.getInt(dateTimeIndex).toString()))
+                     cursor.getString(titleIndex).toString(),
+                     cursor.getString(describIndex).toString(),
+                     cursor.getString(dateTimeIndex).toString()))
 
             } while (cursor.moveToNext())
         } else Log.d("mLog", "0 rows")

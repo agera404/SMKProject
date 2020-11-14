@@ -13,7 +13,7 @@
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/toolbar"
+            android:id="@+id/addrecipr_toolbar"
             style="@style/Toolbar"/>
         <EditText
             android:id="@+id/titleRecipeTextView"

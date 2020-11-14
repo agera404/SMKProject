@@ -21,10 +21,11 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_recipe)
+        addrecipr_toolbar
 
         //back screen button
-        toolbar.setNavigationIcon(R.drawable.ic_action_name)
-        toolbar.setNavigationOnClickListener(object: View.OnClickListener {
+        addrecipr_toolbar.setNavigationIcon(R.drawable.ic_action_name)
+        addrecipr_toolbar.setNavigationOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?){
 
                 saveRecipe()
