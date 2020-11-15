@@ -1,9 +1,7 @@
 package com.example.smkproject.presenters
 
 import android.content.Intent
-import android.provider.SyncStateContract
 import com.example.smkproject.MainActivity
-import com.example.smkproject.common.MainRepository
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.views.AddRecipeView
 import java.text.SimpleDateFormat
