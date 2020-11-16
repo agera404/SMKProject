@@ -16,17 +16,22 @@
             android:id="@+id/addrecipr_toolbar"
             style="@style/Toolbar"/>
         <EditText
-            android:id="@+id/titleRecipeTextView"
+            android:id="@+id/titleRecipeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TITLE"/>
         <EditText
-            android:id="@+id/describRecipeTextView"
+            android:id="@+id/describRecipeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
-            android:lines="5"
-            android:hint="DESCRIPTION"/>
+            android:lines="8"
+            android:hint="DESCRIPTION"
+            />
+        <EditText
+            android:id="@+id/tagsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

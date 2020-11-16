@@ -47,7 +47,7 @@ class RecipesFragment : Fragment(), RecipesView {
             )
         val textView: TextView = TextView(context)
         val text =
-            "<h2>" + recipe.title + "</h2><br/><p>" + recipe.describ + "<p><br/>" + "<p>" + recipe.dateTime + "</p>"
+            "<h2>" + recipe.title + "</h2><br/><p>" + recipe.describ + "<p><br/>" + "<p>" + recipe.dateTime + "</p><br/><p>" +recipe.tags+"</p>"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT);
         } else {

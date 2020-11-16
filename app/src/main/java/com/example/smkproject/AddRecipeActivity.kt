@@ -16,6 +16,7 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
     private val presenter = AddRecipePresenter(this)
     var title:String = "Новый рецепт"
     var describ: String = ""
+    var tags: String = "Без тега"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,17 +28,16 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
         addrecipr_toolbar.setNavigationIcon(R.drawable.ic_action_name)
         addrecipr_toolbar.setNavigationOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?){
-
                 saveRecipe()
             }
         })
 
 
-        //слушаем события titleRecipeTextView
-        titleRecipeTextView.addTextChangedListener(object : TextWatcher {
+        //слушаем события titleRecipeEditText
+        titleRecipeEditText.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                title = titleRecipeTextView.text.toString()
+                title = titleRecipeEditText.text.toString()
 
             }
 
@@ -49,12 +49,27 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
                                        before: Int, count: Int) {
             }
         })
-        //слушаем события describRecipeTextView
-        describRecipeTextView.addTextChangedListener(object : TextWatcher {
+        //слушаем события describRecipeEditText
+        describRecipeEditText.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
 
-                describ = describRecipeTextView.text.toString()
+                describ = describRecipeEditText.text.toString()
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+            }
+        })
+        //слушаем события describRecipeEditText
+        tagsEditText.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                tags = tagsEditText.text.toString()
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int,
@@ -88,7 +103,7 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
         if(describ.length<=0) presenter.onBack()
         if(describ.length>0){
             if(title.length<=0) title="Новый рецепт"
-            presenter.saveRecipe(title, describ)
+            presenter.saveRecipe(title, describ, tags)
             presenter.onBack()
         }
 
