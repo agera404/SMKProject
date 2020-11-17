@@ -18,17 +18,16 @@ class AddRecipePresenter (var view: AddRecipeView){
         )
         val date = dateFormat.format(currentDate)
         val recipe = Recipe(title, describ, date, tags)
-        val adapterDB = RecipesAdapterDB(view.getContex())
+        val adapterDB = RecipesAdapterDB(view.getDBHelper())
         Log.d("mLog", "Пытаемся сохранить рецет")
-        adapterDB.saveRecipe(view.getContex(), recipe)
+        adapterDB.saveRecipe(recipe)
 
 
     }
     fun onBack(){
-        val adapterDB = RecipesAdapterDB(view.getContex())
-        adapterDB.loadRecipesInLog(view.getContex())
-        val intent = Intent(view.getContex(), MainActivity::class.java)
-        view.setResult(intent)
+        val adapterDB = RecipesAdapterDB(view.getDBHelper())
+        adapterDB.loadRecipesInLog()
+        view.setResult(view.intent())
         view.navigateTo(MainActivity::class.java)
     }
 

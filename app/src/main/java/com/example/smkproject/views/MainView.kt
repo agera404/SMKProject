@@ -1,11 +1,12 @@
 package com.example.smkproject.views
 
-import android.view.View
+
 import androidx.fragment.app.Fragment
-import com.example.smkproject.common.ViewContext
+import com.example.smkproject.common.DBHelper
 import com.example.smkproject.common.ViewNavigator
+import com.example.smkproject.models.Recipe
 
-interface MainView : ViewNavigator, ViewContext {
-    fun showRecipe(): Fragment
-
+interface MainView : ViewNavigator {
+    fun showRecipe(recipes: ArrayList<Recipe>): Fragment
+    fun getDBHelper(): DBHelper
 }

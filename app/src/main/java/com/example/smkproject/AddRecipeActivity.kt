@@ -8,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.smkproject.common.DBHelper
 import com.example.smkproject.presenters.AddRecipePresenter
 import com.example.smkproject.views.AddRecipeView
 import kotlinx.android.synthetic.main.activity_add_recipe.*
@@ -90,12 +91,14 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
         return true
     }
 
+    override fun intent(): Intent {
+        val intent = Intent(this, MainActivity::class.java)
+        return intent
+    }
 
-
-
-
-    override fun getContex(): Context {
-        return this@AddRecipeActivity
+    override fun getDBHelper(): DBHelper {
+        var dbHelper = DBHelper(this)
+        return dbHelper
     }
 
 
