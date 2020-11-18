@@ -11,8 +11,7 @@ class RecipesPresenter(var view: RecipesView){
     fun showRecipes(){
         if(recipes!=null){
             for (recipe in recipes){
-                if(recipe == null)Log.d("mLog", "recipE is null")
-                else view.setRecipeOnLayout(recipe)
+                view.setRecipeOnLayout(recipe)
             }
         } else Log.d("mLog", "recipeS is null")
     }

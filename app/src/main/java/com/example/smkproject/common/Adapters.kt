@@ -85,16 +85,13 @@ class RecipesAdapterDB(_dbHelper: DBHelper?)
     }
     fun saveRecipe(recipe: Recipe) {
 
-            val rtDB = RTAdapterDB(dbHelper)
-            val tagsDB = TagsAdapterDB(dbHelper)
-
             var idRecipe=insert(recipe)
             var idTag: Long = -1
-            for (_tag in recipe.tags.split(",").toTypedArray()){
+            for (_tag in recipe.tags?.split(",")?.toTypedArray()!!){
                 var tag = _tag.replace(" ", "")
-                idTag = tagsDB.getIdTag(tag)
-                tagsDB.updateCount(idTag, true)
-                rtDB.insert(idRecipe, idTag)
+                idTag = TagsAdapterDB(dbHelper).getIdTag(tag)
+                TagsAdapterDB(dbHelper).updateCount(idTag, true)
+                RTAdapterDB(dbHelper).insert(idRecipe, idTag)
             }
     }
     //Возвращает все рецепты из БД
@@ -111,13 +108,43 @@ class RecipesAdapterDB(_dbHelper: DBHelper?)
             val dateTimeIndex = cursor.getColumnIndex(KEY_DATETIME)
             val tagsIndex = cursor.getColumnIndex(KEY_TAGS)
             do {
-
                 recipes.add(
                     Recipe(
-                    cursor.getString(titleIndex).toString(),
-                    cursor.getString(describIndex).toString(),
-                    cursor.getString(dateTimeIndex).toString(),
-                    cursor.getString(tagsIndex).toString())
+                        cursor.getLong(idIndex),
+                        cursor.getString(titleIndex).toString(),
+                        cursor.getString(describIndex).toString(),
+                        cursor.getString(dateTimeIndex).toString(),
+                        cursor.getString(tagsIndex).toString()
+                    )
+                )
+
+            } while (cursor.moveToNext())
+        } else Log.d("mLog", "нечего выгружать из бд")
+
+        cursor.close()
+
+        return recipes
+    }
+    fun loadRecipes(_cursor: Cursor): ArrayList<Recipe>{
+        var recipes: ArrayList<Recipe> = ArrayList()
+
+        val database = dbHelper!!.writableDatabase
+        val cursor: Cursor = _cursor
+        if (cursor.moveToFirst()) {
+            val idIndex = cursor.getColumnIndex(KEY_ID)
+            val titleIndex = cursor.getColumnIndex(KEY_TITLE)
+            val describIndex = cursor.getColumnIndex(KEY_DESCRIB)
+            val dateTimeIndex = cursor.getColumnIndex(KEY_DATETIME)
+            val tagsIndex = cursor.getColumnIndex(KEY_TAGS)
+            do {
+                recipes.add(
+                    Recipe(
+                        cursor.getLong(idIndex),
+                        cursor.getString(titleIndex).toString(),
+                        cursor.getString(describIndex).toString(),
+                        cursor.getString(dateTimeIndex).toString(),
+                        cursor.getString(tagsIndex).toString()
+                    )
                 )
 
             } while (cursor.moveToNext())
@@ -190,13 +217,15 @@ class TagsAdapterDB(_dbHelper: DBHelper?){
             val countIndex = cursor.getColumnIndex(KEY_COUNT)
 
             do {
-                tags.add(
-                    Tag(
-                        cursor.getLong(idIndex),
-                        cursor.getString(tagIndex),
-                        cursor.getInt(countIndex)
-                    )
+
+                var tag = Tag(
+                    cursor.getLong(idIndex),
+                    cursor.getString(tagIndex),
+                    cursor.getInt(countIndex)
                 )
+                var recipes = RTAdapterDB(dbHelper).loadRecipeForTag(tag.id)
+                tag.recipes = recipes
+                tags.add(tag)
 
             } while (cursor.moveToNext())
         } else Log.d("mLog", "нечего выгружать из бд")
@@ -233,7 +262,7 @@ class TagsAdapterDB(_dbHelper: DBHelper?){
         val database = dbHelper!!.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(KEY_TAG, tag)
-        contentValues.put(KEY_COUNT, 1)
+        contentValues.put(KEY_COUNT, 0)
         return database.insert(DBHelper.TABLE_TAGS, null, contentValues)
     }
 
@@ -252,5 +281,12 @@ class RTAdapterDB(_dbHelper: DBHelper?){
         contentValues.put(KEY_IDRECIPE, idRecipe)
         contentValues.put(KEY_IDTAG, idTag)
         return database.insert(DBHelper.TABLE_RECIPESTAGS, null, contentValues);
+    }
+    fun loadRecipeForTag(idTag: Long): ArrayList<Recipe>{
+        val database = dbHelper!!.writableDatabase
+        var cursor =
+            database.rawQuery("SELECT * FROM ${DBHelper.TABLE_RECIPESTAGS} LEFT JOIN ${DBHelper.TABLE_RECIPES} ON $KEY_IDRECIPE = ${DBHelper.TABLE_RECIPES}.${RecipesAdapterDB.KEY_ID} WHERE $KEY_IDTAG = $idTag", null)
+        return RecipesAdapterDB(dbHelper).loadRecipes(cursor)
+
     }
 }

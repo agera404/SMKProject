@@ -7,6 +7,6 @@ import com.example.smkproject.common.ViewNavigator
 import com.example.smkproject.models.Recipe
 
 interface MainView : ViewNavigator {
-    fun showRecipe(recipes: ArrayList<Recipe>): Fragment
+    fun showRecipe(recipes: ArrayList<Recipe>)
     fun getDBHelper(): DBHelper
 }

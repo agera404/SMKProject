@@ -1,39 +1,44 @@
 package com.example.smkproject
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
 import com.example.smkproject.common.DBHelper
-import com.example.smkproject.presenters.AddRecipePresenter
-import com.example.smkproject.views.AddRecipeView
-import kotlinx.android.synthetic.main.activity_add_recipe.*
+import com.example.smkproject.presenters.EditRecipePresenter
+import com.example.smkproject.views.EditRecipeView
+import kotlinx.android.synthetic.main.fragment_edit_recipe.*
 
-class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
-    private val presenter = AddRecipePresenter(this)
+
+class EditRecipeFragment : Fragment(),EditRecipeView {
+    private val presenter = EditRecipePresenter(this)
     var title:String = "Новый рецепт"
     var describ: String = ""
-    var tags: String = "Без тега"
+    var tags: String = ""
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_recipe)
-        addrecipr_toolbar
 
-        //back screen button
-        addrecipr_toolbar.setNavigationIcon(R.drawable.ic_action_name)
-        addrecipr_toolbar.setNavigationOnClickListener(object: View.OnClickListener {
-            override fun onClick(v: View?){
-                saveRecipe()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_edit_recipe, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        addRecupeButton.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(v: View?) {
+                presenter.saveRecipe(title,describ,tags)
+                presenter.onBack()
             }
         })
-
-
         //слушаем события titleRecipeEditText
         titleRecipeEditText.addTextChangedListener(object : TextWatcher {
 
@@ -83,24 +88,11 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
         })
 
     }
-    override fun setResult(intent: Intent){
-        setResult(Activity.RESULT_OK, intent)
-    }
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
-    }
-
-    override fun intent(): Intent {
-        val intent = Intent(this, MainActivity::class.java)
-        return intent
-    }
 
     override fun getDBHelper(): DBHelper {
-        var dbHelper = DBHelper(this)
+        var dbHelper = DBHelper(context)
         return dbHelper
     }
-
 
     override fun saveRecipe(){
         if(describ.length<=0) presenter.onBack()
@@ -111,12 +103,5 @@ class AddRecipeActivity : AppCompatActivity(), AddRecipeView  {
         }
 
     }
-
-
-    override fun navigateTo(target: Class<*>) {
-        startActivity(Intent(this, target))
-    }
-
-
 
 }

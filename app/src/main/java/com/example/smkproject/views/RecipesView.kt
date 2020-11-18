@@ -4,5 +4,4 @@ import com.example.smkproject.models.Recipe
 
 interface RecipesView{
     fun setRecipeOnLayout(recipes: Recipe)
-    fun setRecipes(recipes: ArrayList<Recipe>)
 }

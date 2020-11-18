@@ -18,13 +18,21 @@ import kotlinx.android.synthetic.main.fragment_recipes.*
 
 class RecipesFragment : Fragment(), RecipesView {
     var presenter: RecipesPresenter = RecipesPresenter(this)
-    override fun setRecipes(recipes: ArrayList<Recipe>){
-        presenter.recipes = recipes
+    fun setRecipes() {
+        var bundle = activity?.intent?.extras
+        presenter.recipes = arguments?.getSerializable("recipes") as ArrayList<Recipe>
+        Log.d("mLog",presenter.recipes.count().toString())
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setRecipes()
         presenter.showRecipes()
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -59,7 +67,7 @@ class RecipesFragment : Fragment(), RecipesView {
     override fun setRecipeOnLayout(recipe: Recipe) {
         if (recipe!=null){
             val child = createLinLayRecipe(recipe)
-            rootLayout.addView(child)
+            recipesLayout.addView(child)
             Log.d("mLog", "recipE set on layout")
         }else return
 
