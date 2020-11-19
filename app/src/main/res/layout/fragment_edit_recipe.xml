@@ -9,34 +9,72 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/addrecipr_toolbar"
-            style="@style/Toolbar"/>
+
         <EditText
             android:id="@+id/titleRecipeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TITLE"/>
+            android:hint="Title"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/listIngredients">
+            <include layout="@layout/ingredient_container"/>
+
+        </LinearLayout>
         <EditText
             android:id="@+id/describRecipeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
-            android:lines="8"
+            android:lines="12"
+            android:gravity="top|start"
             android:hint="DESCRIPTION"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                android:text="@string/amount_portions"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Portions"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
         <EditText
             android:id="@+id/tagsEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:hint="Tags"/>
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/add_recipe"
-            android:id="@+id/addRecupeButton"/>
-
+            android:id="@+id/addRecipeButton"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/back_home"
+            android:id="@+id/backButton"/>
     </LinearLayout>
 
 </FrameLayout>

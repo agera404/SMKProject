@@ -2,7 +2,15 @@
     <string name="app_name">SMKProject</string>
     <string name="back_home">Назад</string>
     <string name="add_recipe">Добавить новый рецепт</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="amount_portions">Количество порций:</string>
+    <string name="all_Recipes">Все рецепты</string>
+    <string-array name="unit">
+        <item>мл</item>
+        <item>л</item>
+        <item>г</item>
+        <item>кг</item>
+        <item>ч.л</item>
+        <item>ст.л</item>
+        <item>стакан</item>
+    </string-array>
 </resources>

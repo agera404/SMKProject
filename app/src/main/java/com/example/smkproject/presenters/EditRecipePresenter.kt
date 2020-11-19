@@ -2,25 +2,24 @@ package com.example.smkproject.presenters
 
 import android.util.Log
 import com.example.smkproject.MainActivity
+import com.example.smkproject.common.DBHelper
+import com.example.smkproject.common.MainRepository
 import com.example.smkproject.common.RecipesAdapterDB
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.views.EditRecipeView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditRecipePresenter (var view: EditRecipeView){
+class EditRecipePresenter (var view: EditRecipeView, _dbHelper:DBHelper){
+    var dbHelper = _dbHelper
+    var repository =  MainRepository(dbHelper)
 
     fun saveRecipe(title: String, describ: String, tags:String){
         val currentDate = Date()
-        val dateFormat = SimpleDateFormat(
-            "dd-MM-yyyy HH:mm:ss"
-        )
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
         val date = dateFormat.format(currentDate)
         val recipe = Recipe(-1,title, describ, date, tags)
-        val adapterDB = RecipesAdapterDB(view.getDBHelper())
-        Log.d("mLog", "Пытаемся сохранить рецет")
-        adapterDB.saveRecipe(recipe)
-
+        repository.saveRecipe(recipe)
 
     }
     fun sortTags(tags: String): String{
@@ -33,9 +32,7 @@ class EditRecipePresenter (var view: EditRecipeView){
         return newTags.dropLast(2)
     }
     fun onBack(){
-        val adapterDB = RecipesAdapterDB(view.getDBHelper())
-        adapterDB.loadRecipesInLog()
-
+        view.navigateToFragment()
     }
 
 

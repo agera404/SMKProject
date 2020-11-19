@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.smkproject.common.DBHelper
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.presenters.RecipesPresenter
 import com.example.smkproject.views.RecipesView
@@ -17,22 +18,31 @@ import kotlinx.android.synthetic.main.fragment_recipes.*
 
 
 class RecipesFragment : Fragment(), RecipesView {
-    var presenter: RecipesPresenter = RecipesPresenter(this)
-    fun setRecipes() {
-        var bundle = activity?.intent?.extras
-        presenter.recipes = arguments?.getSerializable("recipes") as ArrayList<Recipe>
-        Log.d("mLog",presenter.recipes.count().toString())
-    }
+    private var dbHelper: DBHelper? = null
+    private var presenter: RecipesPresenter? = null
+
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setRecipes()
-        presenter.showRecipes()
 
+
+        dbHelper = DBHelper(context)
+        presenter = RecipesPresenter(this, dbHelper!!)
+
+        val bundle = arguments
+        var idTag: Long? = bundle?.getLong("idTag")
+        Log.d("mLog","idTag - $idTag")
+        presenter?.setIdTag(idTag)
+
+
+
+        presenter?.showRecipes()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -40,10 +50,11 @@ class RecipesFragment : Fragment(), RecipesView {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_recipes, container, false)
     }
 
-
+    //переделать, передавать из презентера не рецепт, а text: String
     private fun createLinLayRecipe(recipe: Recipe): View {
 
         val linLay = LinearLayout(context)
@@ -64,6 +75,7 @@ class RecipesFragment : Fragment(), RecipesView {
         linLay.addView(textView)
         return linLay
     }
+    //переделать, передавать из презентера не рецепт, а text: String
     override fun setRecipeOnLayout(recipe: Recipe) {
         if (recipe!=null){
             val child = createLinLayRecipe(recipe)
