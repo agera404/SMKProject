@@ -15,7 +15,7 @@ class MainRepository(_dbHelper: DBHelper) {
         tags = loadTags()
     }
     fun saveRecipe(recipe:Recipe){
-        var adapterDB = RecipesAdapterDB(dbHelper)
+        var adapterDB = RecipesDB(dbHelper)
         adapterDB.saveRecipe(recipe)
     }
     fun getRecipesByTag(idTag: Long): ArrayList<Recipe>{
@@ -26,7 +26,7 @@ class MainRepository(_dbHelper: DBHelper) {
         return allRecipes
     }
     fun loadRecipes(): ArrayList<Recipe>{
-        val adapterDB = RecipesAdapterDB(dbHelper)
+        val adapterDB = RecipesDB(dbHelper)
         return adapterDB.loadRecipes()
     }
     fun loadTags(): ArrayList<Tag>{

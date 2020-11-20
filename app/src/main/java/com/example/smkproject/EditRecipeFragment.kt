@@ -4,6 +4,7 @@ package com.example.smkproject
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Spinner
 import androidx.core.view.children
 import com.example.smkproject.common.DBHelper
 import com.example.smkproject.presenters.EditRecipePresenter
@@ -19,20 +21,9 @@ import kotlinx.android.synthetic.main.fragment_edit_recipe.*
 import kotlinx.android.synthetic.main.ingredient_container.*
 
 
-class EditRecipeFragment : Fragment(),EditRecipeView {
-    private var dbHelper: DBHelper?= null
+class EditRecipeFragment : Fragment(), EditRecipeView {
+    private var dbHelper: DBHelper? = null
     private var presenter: EditRecipePresenter? = null
-
-    var ingredientEditText: EditText? = null
-    var amountEditText: EditText? = null
-    var delIngrButton:Button? = null
-
-    var title:String = "Новый рецепт"
-    var describ: String = ""
-    var tags: String = ""
-    var countIngr:Int = 1
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,32 +37,36 @@ class EditRecipeFragment : Fragment(),EditRecipeView {
 
         dbHelper = DBHelper(context)
         presenter = EditRecipePresenter(this, dbHelper!!)
-        countIngr = listIngredients.childCount
-        if (countIngr == 1){
-            var view = listIngredients.children.elementAt(0) as LinearLayout
-            ingredientEditText = view.children.elementAt(1) as EditText
-            amountEditText = view.children.elementAt(2) as EditText
-            delIngrButton = view.children.elementAt(0) as Button
-            delIngrButton?.setOnClickListener { deliteIngredient(delIngrButton!!) }
-
-        }
+        initiationIngredients()
         setListeners()
-        textChangedLiseners()
-
     }
 
+    override fun navigateToFragment() {
+        activity?.onBackPressedDispatcher
+    }
 
-    fun setListeners(){
+    var title: String = "Новый рецепт"
+    var describ: String = ""
+    var tags: String = ""
 
 
+    private fun setListeners() {
 
-        addRecipeButton.setOnClickListener(object : View.OnClickListener{
+        addRecipeButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                presenter?.saveRecipe(title,describ,tags)
+
+                presenter?.saveRecipe(title, describ, tags)
                 presenter?.onBack()
+                Log.d("mLog", "Click")
             }
         })
-        //слушаем события titleRecipeEditText
+        backButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                presenter?.onBack()
+                Log.d("mLog", "Click")
+            }
+        })
+
         titleRecipeEditText.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
@@ -79,128 +74,122 @@ class EditRecipeFragment : Fragment(),EditRecipeView {
 
             }
 
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-            }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
-        //слушаем события describRecipeEditText
+
         describRecipeEditText.addTextChangedListener(object : TextWatcher {
-
             override fun afterTextChanged(s: Editable) {
-
                 describ = describRecipeEditText.text.toString()
             }
 
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
-        //слушаем события describRecipeEditText
         tagsEditText.addTextChangedListener(object : TextWatcher {
-
             override fun afterTextChanged(s: Editable) {
                 tags = tagsEditText.text.toString()
             }
 
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
-        ingredient.addTextChangedListener(object : TextWatcher {
 
-            override fun afterTextChanged(s: Editable) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-            }
-        })
-        amountIngredient.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-            }
-        })
-        //spinnerIngredient <- нужно следить за ним
     }
-    private fun deliteIngredient(button: Button){
-        if(countIngr>2){
+
+    /*<-----------------------------------тут начинаем работать с ингредиентами------------------------------->*/
+
+    var ingredientEditText: EditText? = null //ингредиент
+    var amountEditText: EditText? = null //кол-во ингредиента
+    var delIngrButton: Button? = null //кнопка для удаения ингредиента
+    var countIngr: Int = 1 //считаем кол-во полей для ввода ингредиентов
+
+    val indexButt = 0
+    val indexTitle = 1
+    val indexAmount = 2
+    val indexSpinner = 3
+
+    private fun initiationIngredients() {
+        countIngr = listIngredients.childCount
+        if (countIngr == 1) {
+            var view = listIngredients.children.elementAt(0) as LinearLayout
+            ingredientEditText = view.children.elementAt(indexTitle) as EditText
+            amountEditText = view.children.elementAt(indexAmount) as EditText
+            delIngrButton = view.children.elementAt(indexButt) as Button
+            delIngrButton?.setOnClickListener { deleteIngredient(delIngrButton!!) }
+            setIngredientChangedLiseners()
+        }
+    }
+
+    override fun saveIngredient() {
+        var count = listIngredients.childCount
+        var i = 0
+        do {
+            var linearLayout = listIngredients.children.elementAt(i) as LinearLayout
+            var titleET = linearLayout.children.elementAt(indexTitle) as EditText
+            var amountET = linearLayout.children.elementAt(indexAmount) as EditText
+            var unitSp = linearLayout.children.elementAt(indexSpinner) as Spinner
+
+            if (titleET.text.isNotEmpty() && amountET.text.isNotEmpty()) {
+
+                var title = titleET.text.toString()
+                var amount = amountET.text.toString().toDouble()
+                var unit = unitSp.selectedItem.toString()
+                Log.d("mLog", title)
+                presenter?.setIngredient(title, amount, unit)
+            }
+            i++
+        } while (i < count)
+    }
+
+    //удаляем поля для ввода ингредиента
+    private fun deleteIngredient(button: Button) {
+        if (countIngr > 1) {
             var parent: ViewGroup = button.parent as ViewGroup
             var grandParent = parent.parent as ViewGroup
-            var ingr = parent.children.elementAt(1) as EditText
-            var amount = parent.children.elementAt(2) as EditText
-            if(!ingr.text.isEmpty() && !amount.text.isEmpty()){
-
-                ingredientEditText = (grandParent.children.last() as LinearLayout).children.elementAt(1) as EditText
-                amountEditText = (grandParent.children.last() as LinearLayout).children.elementAt(2) as EditText
+            var ingr = parent.children.elementAt(indexTitle) as EditText
+            var amount = parent.children.elementAt(indexAmount) as EditText
+            if (ingr.text.isNotEmpty() || amount.text.isNotEmpty()) {
+                ingredientEditText =
+                    (grandParent.children.last() as LinearLayout).children.elementAt(1) as EditText
+                amountEditText =
+                    (grandParent.children.last() as LinearLayout).children.elementAt(2) as EditText
                 grandParent.removeView(parent)
-                countIngr-=1
+                countIngr -= 1
             }
         }
     }
-    fun newIngredientView(){
-        if(ingredientEditText?.text!!.length>0 && amountIngredient.text.length>0){
-            var view = LayoutInflater.from(context).inflate(R.layout.ingredient_container,null)
-            countIngr+=1
-            var button = (view as LinearLayout).children.elementAt(0) as Button
-            ingredientEditText = (view as LinearLayout).children.elementAt(1) as EditText
-            amountEditText = (view as LinearLayout).children.elementAt(2) as EditText
-            textChangedLiseners()
-            button.isClickable = true
-            button.setOnClickListener{deliteIngredient(button)}
 
+    //создаем новое пое для ингредиента
+    fun newIngredientView() {
+        if (ingredientEditText?.text!!.isNotEmpty() && amountIngredient.text.isNotEmpty()) {
+            var view = LayoutInflater.from(context).inflate(R.layout.ingredient_container, null)
+            countIngr += 1
+            var button = (view as LinearLayout).children.elementAt(indexButt) as Button
+            ingredientEditText = (view as LinearLayout).children.elementAt(indexTitle) as EditText
+            amountEditText = (view as LinearLayout).children.elementAt(indexAmount) as EditText
+            setIngredientChangedLiseners()
+            button.isClickable = true
+            button.setOnClickListener { deleteIngredient(button) }
             listIngredients.addView(view)
         }
 
     }
-    fun textChangedLiseners(){
-        ingredientEditText!!.addTextChangedListener(object: TextWatcher{
+
+    private fun setIngredientChangedLiseners() {
+        ingredientEditText!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = newIngredientView()
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int){}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        amountEditText!!.addTextChangedListener(object: TextWatcher{
+        amountEditText!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = newIngredientView()
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int){}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
-    override fun navigateToFragment(){
-        activity?.onBackPressedDispatcher
-    }
 
-    override fun saveRecipe(){
-        if(describ.length<=0) presenter?.onBack()
-        if(describ.length>0){
-            if(title.length<=0) title="Новый рецепт"
-            presenter?.saveRecipe(title, describ, tags)
-            presenter?.onBack()
-        }
-
-    }
 
 }

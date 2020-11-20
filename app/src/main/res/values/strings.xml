@@ -4,6 +4,7 @@
     <string name="add_recipe">Добавить новый рецепт</string>
     <string name="amount_portions">Количество порций:</string>
     <string name="all_Recipes">Все рецепты</string>
+    <string name="new_recipe">Новый рецепт</string>
     <string-array name="unit">
         <item>мл</item>
         <item>л</item>
@@ -12,5 +13,6 @@
         <item>ч.л</item>
         <item>ст.л</item>
         <item>стакан</item>
+        <item>шт</item>
     </string-array>
 </resources>
