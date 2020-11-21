@@ -8,7 +8,10 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.example.smkproject.common.DBHelper
 import com.example.smkproject.presenters.MainPresenter
 import com.example.smkproject.views.MainView
@@ -19,8 +22,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,  MainView {
     private var dbHelper: DBHelper? = null
     private var presenter: MainPresenter?= null
+    var navOptions: NavOptions? = null
 
-    var navController: NavController? = null
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +31,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         dbHelper = DBHelper(context = this)
         presenter = MainPresenter(this, dbHelper!!)
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+
+        navOptions = NavOptions.Builder().setPopUpTo(R.id.recipesFragment, true).build()
 
         createMenu()
         presenter!!.showRecipes(-1)
@@ -47,17 +51,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
-
-
         return true
     }
 
     override fun navigateToEditRecipeFragment() {
-        navController?.navigate(R.id.editRecipeFragment)
+        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_to_editRecipeFragment, null, navOptions);
     }
 
+
     override fun navigateToRecipeFragment(bundle: Bundle){
-        navController?.navigate(R.id.recipesFragment, bundle)
+        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_to_recipesFragment, bundle, navOptions);
     }
 
     fun createMenu(){
@@ -70,12 +73,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         menu?.findItem(R.id.allRecipeItemMenu)?.setOnMenuItemClickListener(object:MenuItem.OnMenuItemClickListener{
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 presenter?.showRecipes(-1)
+                drawerLayout.closeDrawer(GravityCompat.START)
                 return true
             }
         })
         menu?.findItem(R.id.newRecipeItemMenu)?.setOnMenuItemClickListener(object :MenuItem.OnMenuItemClickListener{
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 presenter?.addNewRecipe()
+                drawerLayout.closeDrawer(GravityCompat.START)
                 return true
             }
         })

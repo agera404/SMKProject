@@ -9,10 +9,21 @@
         android:id="@+id/recipesFragment"
         android:name="com.example.smkproject.RecipesFragment"
         android:label="fragment_recipes"
-        tools:layout="@layout/fragment_recipes" />
+        tools:layout="@layout/fragment_recipes">
+        <action
+            android:id="@+id/action_to_recipesFragment"
+            app:destination="@+id/recipesFragment"/>
+            <action
+                android:id="@+id/action_to_editRecipeFragment"
+                app:destination="@id/editRecipeFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/editRecipeFragment"
         android:name="com.example.smkproject.EditRecipeFragment"
         android:label="fragment_edit_recipe"
-        tools:layout="@layout/fragment_edit_recipe" />
+        tools:layout="@layout/fragment_edit_recipe">
+            <action
+                android:id="@+id/action_to_recipesFragment"
+                app:destination="@+id/recipesFragment"/>
+    </fragment>
 </navigation>

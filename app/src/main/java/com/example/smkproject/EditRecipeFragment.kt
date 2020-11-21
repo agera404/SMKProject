@@ -14,9 +14,12 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.core.view.children
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.smkproject.common.DBHelper
 import com.example.smkproject.presenters.EditRecipePresenter
 import com.example.smkproject.views.EditRecipeView
+import com.example.smkproject.views.MainView
 import kotlinx.android.synthetic.main.fragment_edit_recipe.*
 import kotlinx.android.synthetic.main.ingredient_container.*
 
@@ -24,6 +27,7 @@ import kotlinx.android.synthetic.main.ingredient_container.*
 class EditRecipeFragment : Fragment(), EditRecipeView {
     private var dbHelper: DBHelper? = null
     private var presenter: EditRecipePresenter? = null
+    var navController: NavController? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +41,19 @@ class EditRecipeFragment : Fragment(), EditRecipeView {
 
         dbHelper = DBHelper(context)
         presenter = EditRecipePresenter(this, dbHelper!!)
+
+
         initiationIngredients()
         setListeners()
     }
 
     override fun navigateToFragment() {
-        activity?.onBackPressedDispatcher
+        //показать страницу со всеми рецептами
+        var main = activity as MainView
+        var bundle = Bundle()
+        bundle.putLong("idTag", -1)
+        main.navigateToRecipeFragment(bundle)
+
     }
 
     var title: String = "Новый рецепт"
