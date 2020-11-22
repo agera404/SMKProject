@@ -5,18 +5,24 @@ import com.example.smkproject.common.DBHelper
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.views.MainView
 
-class MainPresenter (var view: MainView, _dbHelper: DBHelper){
-    var dbHelper = _dbHelper
-    var repository =  MainRepository(dbHelper)
+class MainPresenter (var view: MainView, dbHelper: DBHelper){
+
+
+    init {
+        MainRepository.dbHelper = dbHelper
+        MainRepository.onBack = {view.navigateToRecipeFragment()}
+    }
+
+
 
     fun addNewRecipe(){
         view.navigateToEditRecipeFragment()
     }
     fun showRecipes(idTag: Long){
-        var bundle = Bundle()
-        bundle.putLong("idTag", idTag)
-        view.navigateToRecipeFragment(bundle)
+        MainRepository.currentIdTag = idTag
+        view.navigateToRecipeFragment()
     }
+
 
 
 

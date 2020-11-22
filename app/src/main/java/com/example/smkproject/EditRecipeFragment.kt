@@ -17,6 +17,7 @@ import androidx.core.view.children
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.smkproject.common.DBHelper
+import com.example.smkproject.common.MainRepository
 import com.example.smkproject.presenters.EditRecipePresenter
 import com.example.smkproject.views.EditRecipeView
 import com.example.smkproject.views.MainView
@@ -24,10 +25,8 @@ import kotlinx.android.synthetic.main.fragment_edit_recipe.*
 import kotlinx.android.synthetic.main.ingredient_container.*
 
 
-class EditRecipeFragment : Fragment(), EditRecipeView {
-    private var dbHelper: DBHelper? = null
+class EditRecipeFragment : Fragment(), EditRecipeView, TextWatcher {
     private var presenter: EditRecipePresenter? = null
-    var navController: NavController? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,76 +37,47 @@ class EditRecipeFragment : Fragment(), EditRecipeView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        dbHelper = DBHelper(context)
-        presenter = EditRecipePresenter(this, dbHelper!!)
-
-
+        presenter = EditRecipePresenter(this)
         initiationIngredients()
-        setListeners()
+        addRecipeButton.setOnClickListener(clickListener)
+        backButton.setOnClickListener(clickListener)
+    }
+    val clickListener = View.OnClickListener {v ->
+        when(v){
+            addRecipeButton ->{
+                MainRepository.saveRecipe()
+                MainRepository.onBack
+            }
+            backButton ->{
+                MainRepository.onBack
+            }
+        }
     }
 
-    override fun navigateToFragment() {
-        //показать страницу со всеми рецептами
-        var main = activity as MainView
-        var bundle = Bundle()
-        bundle.putLong("idTag", -1)
-        main.navigateToRecipeFragment(bundle)
+    override fun afterTextChanged(s: Editable?) {
+        when(s){
+            titleRecipeEditText ->{
+                presenter?.title  = titleRecipeEditText.text.toString()
+            }
+            describRecipeEditText ->{
+                presenter?.describ = describRecipeEditText.text.toString()
+            }
+            tagsEditText ->{
+                presenter?.tags = tagsEditText.text.toString()
+            }
 
+        }
     }
 
-    var title: String = "Новый рецепт"
-    var describ: String = ""
-    var tags: String = ""
-
-
-    private fun setListeners() {
-
-        addRecipeButton.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-
-                presenter?.saveRecipe(title, describ, tags)
-                presenter?.onBack()
-                Log.d("mLog", "Click")
-            }
-        })
-        backButton.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                presenter?.onBack()
-                Log.d("mLog", "Click")
-            }
-        })
-
-        titleRecipeEditText.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable) {
-                title = titleRecipeEditText.text.toString()
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-        })
-
-        describRecipeEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                describ = describRecipeEditText.text.toString()
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-        })
-        tagsEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                tags = tagsEditText.text.toString()
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-        })
-
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        TODO("Not yet implemented")
     }
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        TODO("Not yet implemented")
+    }
+
+
 
     /*<-----------------------------------тут начинаем работать с ингредиентами------------------------------->*/
 
@@ -189,6 +159,7 @@ class EditRecipeFragment : Fragment(), EditRecipeView {
     }
 
     private fun setIngredientChangedLiseners() {
+
         ingredientEditText!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = newIngredientView()
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -201,6 +172,8 @@ class EditRecipeFragment : Fragment(), EditRecipeView {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+
+
 
 
 }

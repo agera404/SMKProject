@@ -23,7 +23,6 @@ class DBHelper internal constructor(context: Context?) :
         db.execSQL(CREATE_TABLE_RECIPESTAGS)
         db.execSQL(CREATE_TABLE_INGREDIENTS)
         db.execSQL(CREATE_TABLE_RECIPEINGREDIENT)
-
     }
 
     override fun onUpgrade(
@@ -328,7 +327,7 @@ class RecipeTagDB(_dbHelper: DBHelper?) {
     }
 
     private var dbHelper: DBHelper? = _dbHelper
-    fun check(idRecipe: Long, idTag: Long): Boolean{
+    fun equal(idRecipe: Long, idTag: Long): Boolean{
         val database = dbHelper!!.writableDatabase
         var cursor = database.rawQuery("SELECT * FROM ${DBHelper.TABLE_RECIPESTAGS}" +
                 " WHERE ($KEY_IDRECIPE = $idRecipe) AND ($KEY_IDTAG = $idTag)",null)
@@ -336,7 +335,7 @@ class RecipeTagDB(_dbHelper: DBHelper?) {
         return false
     }
     fun insert(idRecipe: Long, idTag: Long): Long {
-        if(!check(idRecipe,idTag)){
+        if(!equal(idRecipe,idTag)){
             val database = dbHelper!!.writableDatabase
             val contentValues = ContentValues()
             contentValues.put(KEY_IDRECIPE, idRecipe)
@@ -443,7 +442,7 @@ class RecipeIngredientDB(_dbHelper: DBHelper?) {
 
     private var dbHelper: DBHelper? = _dbHelper
 
-    fun check(idRecipe: Long, idIngr: Long): Boolean{
+    fun equal(idRecipe: Long, idIngr: Long): Boolean{
         val database = dbHelper!!.writableDatabase
         var cursor = database.rawQuery("SELECT * FROM ${DBHelper.TABLE_RECIPEINGREDIENT}" +
                 " WHERE (${KEY_IDRECIPE} = $idRecipe) AND (${KEY_IDINGR} = $idIngr)",null)
@@ -453,7 +452,7 @@ class RecipeIngredientDB(_dbHelper: DBHelper?) {
 
 
     fun insert(idRecipe: Long, idIngr: Long, amount: Double, unit: String): Long {
-        if (!check(idRecipe, idIngr)){
+        if (!equal(idRecipe, idIngr)){
             val database = dbHelper!!.writableDatabase
             val contentValues = ContentValues()
             contentValues.put(KEY_IDRECIPE, idRecipe)

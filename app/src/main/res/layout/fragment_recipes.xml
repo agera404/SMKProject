@@ -18,7 +18,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/recipesLayout"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="10dp">
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

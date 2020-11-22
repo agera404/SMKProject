@@ -2,9 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/otherSubMenu">
         <item android:id="@+id/allRecipeItemMenu"
-            android:title="@string/all_Recipes" />
+            android:title="@string/all_Recipes"
+            android:onClick="onMenuItemClick"/>
         <item android:id="@+id/newRecipeItemMenu"
-            android:title="@string/add_recipe"/>
+            android:title="@string/add_recipe"
+            android:onClick="onMenuItemClick"/>
     </group>
 
 </menu>
