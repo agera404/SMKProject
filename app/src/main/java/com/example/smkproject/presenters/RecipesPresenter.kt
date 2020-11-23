@@ -10,13 +10,15 @@ import com.example.smkproject.views.RecipesView
 
 class RecipesPresenter(var view: RecipesView){
 
-
+    fun openRecipe(idRecipe: Long){
+        MainRepository.setSelectedRecipe(idRecipe)
+        MainRepository.openRecipe?.invoke()
+    }
 
     fun showRecipes(){
         var recipes = MainRepository.getRecipesByTag(MainRepository.currentIdTag)
             for (recipe in recipes){
-
-                view.setRecipeOnLayout(recipe.title, recipe.describ, recipe.tags)
+                view.setRecipeOnLayout(recipe.id, recipe.title, recipe.describ, recipe.tags)
             }
 
     }

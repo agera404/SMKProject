@@ -1,5 +1,5 @@
 package com.example.smkproject.views
 
 interface RecipesView{
-    fun setRecipeOnLayout(title: String, describ: String, tags: String)
+    fun setRecipeOnLayout(id: Long, title: String, describ: String, tags: String)
 }

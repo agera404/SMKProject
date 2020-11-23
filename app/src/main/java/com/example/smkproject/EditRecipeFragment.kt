@@ -14,18 +14,14 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.core.view.children
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import com.example.smkproject.common.DBHelper
+import com.example.smkproject.R.id.titleRecipeET
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.presenters.EditRecipePresenter
 import com.example.smkproject.views.EditRecipeView
-import com.example.smkproject.views.MainView
 import kotlinx.android.synthetic.main.fragment_edit_recipe.*
-import kotlinx.android.synthetic.main.ingredient_container.*
 
 
-class EditRecipeFragment : Fragment(), EditRecipeView, TextWatcher {
+class EditRecipeFragment : Fragment(), EditRecipeView{
     private var presenter: EditRecipePresenter? = null
 
     override fun onCreateView(
@@ -38,142 +34,47 @@ class EditRecipeFragment : Fragment(), EditRecipeView, TextWatcher {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         presenter = EditRecipePresenter(this)
-        initiationIngredients()
         addRecipeButton.setOnClickListener(clickListener)
         backButton.setOnClickListener(clickListener)
+        addIngredientsButton.setOnClickListener(clickListener)
+        titleRecipeET.addTextChangedListener(textWatcher)
+        describRecipeET.addTextChangedListener(textWatcher)
+        tagsET.addTextChangedListener(textWatcher)
     }
     val clickListener = View.OnClickListener {v ->
         when(v){
             addRecipeButton ->{
-                MainRepository.saveRecipe()
-                MainRepository.onBack
+                presenter?.saveRecipe()
+                MainRepository.onBack?.invoke()
             }
             backButton ->{
-                MainRepository.onBack
+                MainRepository.onBack?.invoke()
+            }
+            addIngredientsButton ->{
+                MainRepository.onEditIngredients?.invoke()
+                Log.d("mLog", "Click")
             }
         }
     }
+    private var textWatcher = object : TextWatcher{
+        override fun afterTextChanged(s: Editable?) {
+            if(titleRecipeET.getText().hashCode() == s.hashCode()){
 
-    override fun afterTextChanged(s: Editable?) {
-        when(s){
-            titleRecipeEditText ->{
-                presenter?.title  = titleRecipeEditText.text.toString()
+                presenter?.title  = titleRecipeET.text.toString()
             }
-            describRecipeEditText ->{
-                presenter?.describ = describRecipeEditText.text.toString()
+            if(describRecipeET.getText().hashCode() == s.hashCode()){
+
+                presenter?.describ = describRecipeET.text.toString()
             }
-            tagsEditText ->{
-                presenter?.tags = tagsEditText.text.toString()
+            if(tagsET.getText().hashCode() == s.hashCode()){
+
+                presenter?.tags = tagsET.text.toString()
             }
 
         }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
-
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        TODO("Not yet implemented")
-    }
-
-
-
-    /*<-----------------------------------тут начинаем работать с ингредиентами------------------------------->*/
-
-    var ingredientEditText: EditText? = null //ингредиент
-    var amountEditText: EditText? = null //кол-во ингредиента
-    var delIngrButton: Button? = null //кнопка для удаения ингредиента
-    var countIngr: Int = 1 //считаем кол-во полей для ввода ингредиентов
-
-    val indexButt = 0
-    val indexTitle = 1
-    val indexAmount = 2
-    val indexSpinner = 3
-
-    private fun initiationIngredients() {
-        countIngr = listIngredients.childCount
-        if (countIngr == 1) {
-            var view = listIngredients.children.elementAt(0) as LinearLayout
-            ingredientEditText = view.children.elementAt(indexTitle) as EditText
-            amountEditText = view.children.elementAt(indexAmount) as EditText
-            delIngrButton = view.children.elementAt(indexButt) as Button
-            delIngrButton?.setOnClickListener { deleteIngredient(delIngrButton!!) }
-            setIngredientChangedLiseners()
-        }
-    }
-
-    override fun saveIngredient() {
-        var count = listIngredients.childCount
-        var i = 0
-        do {
-            var linearLayout = listIngredients.children.elementAt(i) as LinearLayout
-            var titleET = linearLayout.children.elementAt(indexTitle) as EditText
-            var amountET = linearLayout.children.elementAt(indexAmount) as EditText
-            var unitSp = linearLayout.children.elementAt(indexSpinner) as Spinner
-
-            if (titleET.text.isNotEmpty() && amountET.text.isNotEmpty()) {
-
-                var title = titleET.text.toString()
-                var amount = amountET.text.toString().toDouble()
-                var unit = unitSp.selectedItem.toString()
-                Log.d("mLog", title)
-                presenter?.setIngredient(title, amount, unit)
-            }
-            i++
-        } while (i < count)
-    }
-
-    //удаляем поля для ввода ингредиента
-    private fun deleteIngredient(button: Button) {
-        if (countIngr > 1) {
-            var parent: ViewGroup = button.parent as ViewGroup
-            var grandParent = parent.parent as ViewGroup
-            var ingr = parent.children.elementAt(indexTitle) as EditText
-            var amount = parent.children.elementAt(indexAmount) as EditText
-            if (ingr.text.isNotEmpty() || amount.text.isNotEmpty()) {
-                ingredientEditText =
-                    (grandParent.children.last() as LinearLayout).children.elementAt(1) as EditText
-                amountEditText =
-                    (grandParent.children.last() as LinearLayout).children.elementAt(2) as EditText
-                grandParent.removeView(parent)
-                countIngr -= 1
-            }
-        }
-    }
-
-    //создаем новое пое для ингредиента
-    fun newIngredientView() {
-        if (ingredientEditText?.text!!.isNotEmpty() && amountIngredient.text.isNotEmpty()) {
-            var view = LayoutInflater.from(context).inflate(R.layout.ingredient_container, null)
-            countIngr += 1
-            var button = (view as LinearLayout).children.elementAt(indexButt) as Button
-            ingredientEditText = (view as LinearLayout).children.elementAt(indexTitle) as EditText
-            amountEditText = (view as LinearLayout).children.elementAt(indexAmount) as EditText
-            setIngredientChangedLiseners()
-            button.isClickable = true
-            button.setOnClickListener { deleteIngredient(button) }
-            listIngredients.addView(view)
-        }
-
-    }
-
-    private fun setIngredientChangedLiseners() {
-
-        ingredientEditText!!.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) = newIngredientView()
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        amountEditText!!.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) = newIngredientView()
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-    }
-
-
-
-
 }

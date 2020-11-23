@@ -14,29 +14,29 @@ class EditRecipePresenter(var view: EditRecipeView) {
     var describ = ""
     var tags = ""
     init {
-        MainRepository.onSaveRecipe = {saveRecipe()}
+        MainRepository.setIngredient = { ing: Ingredient->
+            this.setIngredient(ing)
+        }
     }
     var ingredients = arrayListOf<Ingredient>()
 
-    fun saveRecipe(): Recipe? {
-        view.saveIngredient()
+    fun saveRecipe(){
+
         if (title.length>0 && describ.length>0 && tags.length>0 && ingredients.count() > 0) {
             Log.d("mLog", "ТУТ")
             val currentDate = Date()
             val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
             val date = dateFormat.format(currentDate)
+            Log.d("mLog", "$title $describ $tags")
             val recipe = Recipe(-1, title, describ, date, tags, ingredients)
-            return recipe
+            MainRepository.saveRecipe(recipe)
         }
-        return null
     }
 
-    fun setIngredient(_title: String, _amoung: Double, _unit: String): Boolean {
-        if (_title.length>0 && _amoung > 0 && _unit.length>0) {
-            ingredients.add(Ingredient(_title, _amoung, _unit))
-            return true
+    fun setIngredient(ingredient: Ingredient){
+        if (ingredient.ingredient.length>0 && ingredient.amount > 0 && ingredient.unit.length>0) {
+            ingredients.add(ingredient)
         }
-        return false
     }
 
     fun sortTags(tags: String): String {

@@ -15,7 +15,7 @@
 
 
         <EditText
-            android:id="@+id/titleRecipeEditText"
+            android:id="@+id/titleRecipeET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Title"
@@ -23,13 +23,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/listIngredients">
-            <include layout="@layout/ingredient_container"/>
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/please_add_ingredients"
+                android:textColor="#ff0000"
+                android:gravity="center"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_ingredients"
+                android:id="@+id/addIngredientsButton"/>
+
 
         </LinearLayout>
         <EditText
-            android:id="@+id/describRecipeEditText"
+            android:id="@+id/describRecipeET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
@@ -54,7 +64,7 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/tagsEditText"
+            android:id="@+id/tagsET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tags"/>

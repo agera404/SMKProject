@@ -5,6 +5,13 @@
     <string name="amount_portions">Количество порций:</string>
     <string name="all_Recipes">Все рецепты</string>
     <string name="new_recipe">Новый рецепт</string>
+    <string name="edit_ingredients">Изменить ингредиенты</string>
+    <string name="please_add_ingredients">Пожалуйста, добавте хотя бы один ингредиент!</string>
+    <string name="add_new_ingredient">Добавить новый ингредиент</string>
+    <string name="save_ingredients">Сохранить ингредиенты</string>
+    <string name="error_fild_is_empty">Запоните все поля</string>
+
+
     <string-array name="unit">
         <item>мл</item>
         <item>л</item>
@@ -15,4 +22,6 @@
         <item>стакан</item>
         <item>шт</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
