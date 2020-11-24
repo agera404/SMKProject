@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.example.smkproject.models.Ingredient
 import com.example.smkproject.presenters.RecipePresenter
 import com.example.smkproject.views.RecipeView
+import kotlinx.android.synthetic.main.fragment_edit_recipe.*
 import kotlinx.android.synthetic.main.fragment_recipe.*
 
 
@@ -26,6 +27,8 @@ class RecipeFragment : Fragment(), RecipeView {
         super.onActivityCreated(savedInstanceState)
         presenter = RecipePresenter(this)
         presenter!!.loadRecipe()
+
+
     }
 
     override fun setField(title: String, describ: String, ingredient: String, tags: String){

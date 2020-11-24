@@ -27,8 +27,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/ingredientsTVInEdtitRecipe"
                 android:text="@string/please_add_ingredients"
-                android:textColor="#ff0000"
+                android:textColor="#FF0000"
                 android:gravity="center"/>
             <Button
                 android:layout_width="match_parent"

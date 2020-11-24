@@ -3,20 +3,17 @@ package com.example.smkproject
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.children
-import androidx.navigation.Navigation
+import androidx.fragment.app.Fragment
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.models.Ingredient
 import com.example.smkproject.presenters.EditIngredientsPresenter
 import com.example.smkproject.views.EditIngredientsView
 import kotlinx.android.synthetic.main.fragment_edit_ingredients.*
-import kotlinx.android.synthetic.main.fragment_edit_recipe.*
 
 
 class EditIngredientsFragment : Fragment(), EditIngredientsView {
@@ -32,6 +29,7 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
 
     var ingredientET: EditText? = null //ингредиент
     var amountET: EditText? = null //кол-во ингредиента
+    var unitSpinner: Spinner? = null
     var delIngrButton: Button? = null //кнопка для удаения ингредиента
     var countIngr: Int = 1 //считаем кол-во полей для ввода ингредиентов
 
@@ -45,12 +43,19 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
         amountET = (listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexAmount) as EditText
         amountET?.addTextChangedListener(textWatcher)
 
+        unitSpinner = (listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexSpinner) as Spinner
+
         delIngrButton = (listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexButt) as Button
         delIngrButton?.setOnClickListener(this.clickListener)
 
         addNewIngredientButton.setOnClickListener(clickListener)
         saveIngredientsButton.setOnClickListener(clickListener)
+
+        if (presenter!!.ingredients.count()>0){
+            presenter!!.setIngredients()
+        }
     }
+
     var clickListener = View.OnClickListener { v ->
         when(v){
             delIngrButton->{
@@ -63,6 +68,7 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
                 for (element in listIngredients.children){
                     saveIngredient(element)
                 }
+                MainRepository.selectedRecipe!!.ingredients = presenter!!.ingredients
                 MainRepository.onEditRecipe?.invoke()
             }
         }
@@ -101,6 +107,8 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
 
         delIngrButton = (view as LinearLayout).children.elementAt(indexButt) as Button
         delIngrButton?.setOnClickListener(clickListener)
+
+        unitSpinner = (view as LinearLayout).children.elementAt(indexSpinner) as Spinner
         countIngr += 1
         listIngredients.addView(view)
     }
@@ -116,5 +124,11 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
         }else{
             MainRepository.currentIngredient = Ingredient(title,amount,unit)
         }
+    }
+    override fun loadIngredient(title: String, amount: Double, unit: String){
+        ingredientET?.setText(title)
+        amountET?.setText(amount.toString())
+        unitSpinner?.setSelection((unitSpinner!!.getAdapter() as ArrayAdapter<String>).getPosition(unit))
+        newIngredientView()
     }
 }

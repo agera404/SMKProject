@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 else drawerLayout.closeDrawer(Gravity.RIGHT)
             }
             editRecipeMenuButton ->{
-
+                navigateTo(EDITRECIPE_FRAGMENT)
             }
         }
     }
@@ -77,16 +77,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun navigateTo(i: Int){
         when(i){
             RECIPE_FRAGMENT -> {
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_to_recipeFragment,null, navOptions)
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.recipeFragment,null, navOptions)
             }
             RECIPES_FRAGMENT ->{
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_to_recipesFragment,null, navOptions)
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.recipesFragment,null, navOptions)
             }
             EDITRECIPE_FRAGMENT ->{
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_to_editRecipeFragment, null, navOptions)
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.editRecipeFragment, null, navOptions)
             }
             EDITINGREDIENT_FRAGMENT ->{
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_to_editIngredientsFragment, null, navOptions)
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.editIngredientsFragment, null, navOptions)
             }
         }
 
@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
             R.id.newRecipeItemMenu -> {
+                MainRepository.selectedRecipe = null
                 presenter?.addNewRecipe()
                 drawerLayout.closeDrawer(GravityCompat.START)
 

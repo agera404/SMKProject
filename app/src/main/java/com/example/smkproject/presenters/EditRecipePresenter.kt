@@ -10,32 +10,40 @@ import java.util.*
 
 class EditRecipePresenter(var view: EditRecipeView) {
 
-    var title = ""
-    var describ = ""
-    var tags = ""
+    var recipe: Recipe? = null
+
     init {
-        MainRepository.setIngredient = { ing: Ingredient->
+        if (MainRepository.selectedRecipe != null) {
+            recipe = MainRepository.selectedRecipe
+        }else{
+            recipe = Recipe(-1,"","","","", arrayListOf())
+        }
+        MainRepository.setIngredient = { ing: Ingredient ->
             this.setIngredient(ing)
         }
     }
-    var ingredients = arrayListOf<Ingredient>()
 
-    fun saveRecipe(){
+    fun isRecipeNotNull(): Boolean {
+        if (recipe != null) {
+            return true
+        }
+        return false
+    }
 
-        if (title.length>0 && describ.length>0 && tags.length>0 && ingredients.count() > 0) {
-            Log.d("mLog", "ТУТ")
+    fun saveRecipe() {
+
+        if (recipe?.title?.length!! > 0 && recipe?.describ?.length!! > 0 && recipe?.tags?.length!! > 0 && recipe?.ingredients!!.count() > 0) {
             val currentDate = Date()
             val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
             val date = dateFormat.format(currentDate)
-            Log.d("mLog", "$title $describ $tags")
-            val recipe = Recipe(-1, title, describ, date, tags, ingredients)
-            MainRepository.saveRecipe(recipe)
+            var id: Long = -1
+            MainRepository.saveRecipe(recipe!!)
         }
     }
 
-    fun setIngredient(ingredient: Ingredient){
-        if (ingredient.ingredient.length>0 && ingredient.amount > 0 && ingredient.unit.length>0) {
-            ingredients.add(ingredient)
+    fun setIngredient(ingredient: Ingredient) {
+        if (ingredient.ingredient.length > 0 && ingredient.amount > 0 && ingredient.unit.length > 0) {
+            recipe?.ingredients!!.add(ingredient)
         }
     }
 

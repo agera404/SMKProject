@@ -97,7 +97,9 @@ class RecipesDB(_dbHelper: DBHelper?) {
 
     private var dbHelper: DBHelper? = _dbHelper
 
+    //нужно проверить есть ли похожие рецепты в бд
     fun insert(recipe: Recipe): Long {
+
         val db = dbHelper!!.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(KEY_TITLE, recipe.title);
@@ -106,7 +108,25 @@ class RecipesDB(_dbHelper: DBHelper?) {
         contentValues.put(KEY_TAGS, recipe.tags)
         contentValues.put(KEY_INGREDIENT, recipe.stringIngredient)
         //Вставляем запись в БД и возвращаем ее ID. Если запись не вставиллась, возвращает -1
-        return db.insert(DBHelper.TABLE_RECIPES, null, contentValues);
+        if (!findRecipe(recipe.id))
+            return db.insert(DBHelper.TABLE_RECIPES, null, contentValues);
+        else{
+            db.update(DBHelper.TABLE_RECIPES, contentValues, "$KEY_ID = ${recipe.id}", null)
+            return recipe.id
+        }
+
+    }
+    fun findRecipe(id: Long): Boolean{
+        val db = dbHelper!!.writableDatabase
+        var cursor = db.query(DBHelper.TABLE_RECIPES, null, "$KEY_ID = $id", null, null, null, null, null)
+        if (cursor.moveToFirst()){
+            do {
+                var idRecipe = cursor.getLong(cursor.getColumnIndex(KEY_ID))
+                Log.d("mLog", "heeeeeeeeey $idRecipe")
+                if (id == idRecipe) return true
+            }while (cursor.moveToNext())
+        }
+        return false
     }
 
     fun saveRecipe(recipe: Recipe) {

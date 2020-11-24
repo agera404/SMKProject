@@ -1,6 +1,7 @@
 package com.example.smkproject
 
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -34,21 +35,33 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         presenter = EditRecipePresenter(this)
+
         addRecipeButton.setOnClickListener(clickListener)
         backButton.setOnClickListener(clickListener)
         addIngredientsButton.setOnClickListener(clickListener)
         titleRecipeET.addTextChangedListener(textWatcher)
         describRecipeET.addTextChangedListener(textWatcher)
         tagsET.addTextChangedListener(textWatcher)
+
+        if(presenter!!.isRecipeNotNull()){
+            titleRecipeET.setText(presenter!!.recipe?.title)
+            describRecipeET.setText(presenter!!.recipe?.describ)
+            tagsET.setText(presenter!!.recipe?.tags)
+            ingredientsTVInEdtitRecipe.setText(presenter!!.recipe?.stringIngredient)
+            ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
+        }
+        
     }
     val clickListener = View.OnClickListener {v ->
         when(v){
             addRecipeButton ->{
                 presenter?.saveRecipe()
                 MainRepository.onBack?.invoke()
+                MainRepository.selectedRecipe = null
             }
             backButton ->{
                 MainRepository.onBack?.invoke()
+                MainRepository.selectedRecipe = null
             }
             addIngredientsButton ->{
                 MainRepository.onEditIngredients?.invoke()
@@ -59,16 +72,15 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
     private var textWatcher = object : TextWatcher{
         override fun afterTextChanged(s: Editable?) {
             if(titleRecipeET.getText().hashCode() == s.hashCode()){
-
-                presenter?.title  = titleRecipeET.text.toString()
+                presenter?.recipe?.title  = titleRecipeET.text.toString()
             }
             if(describRecipeET.getText().hashCode() == s.hashCode()){
 
-                presenter?.describ = describRecipeET.text.toString()
+                presenter?.recipe?.describ = describRecipeET.text.toString()
             }
             if(tagsET.getText().hashCode() == s.hashCode()){
 
-                presenter?.tags = tagsET.text.toString()
+                presenter?.recipe?.tags = tagsET.text.toString()
             }
 
         }
