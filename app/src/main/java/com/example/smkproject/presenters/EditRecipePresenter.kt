@@ -18,9 +18,7 @@ class EditRecipePresenter(var view: EditRecipeView) {
         }else{
             recipe = Recipe(-1,"","","","", arrayListOf())
         }
-        MainRepository.setIngredient = { ing: Ingredient ->
-            this.setIngredient(ing)
-        }
+
     }
 
     fun isRecipeNotNull(): Boolean {
@@ -31,19 +29,15 @@ class EditRecipePresenter(var view: EditRecipeView) {
     }
 
     fun saveRecipe() {
+        recipe?.ingredients  = MainRepository.selectedRecipe?.ingredients!!
+        recipe?.stringIngredient = MainRepository.selectedRecipe!!.stringIngredient
 
         if (recipe?.title?.length!! > 0 && recipe?.describ?.length!! > 0 && recipe?.tags?.length!! > 0 && recipe?.ingredients!!.count() > 0) {
             val currentDate = Date()
             val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
             val date = dateFormat.format(currentDate)
-            var id: Long = -1
-            MainRepository.saveRecipe(recipe!!)
-        }
-    }
 
-    fun setIngredient(ingredient: Ingredient) {
-        if (ingredient.ingredient.length > 0 && ingredient.amount > 0 && ingredient.unit.length > 0) {
-            recipe?.ingredients!!.add(ingredient)
+            MainRepository.saveRecipe(recipe!!)
         }
     }
 

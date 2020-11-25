@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.core.view.children
+import androidx.navigation.fragment.findNavController
 import com.example.smkproject.R.id.titleRecipeET
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.presenters.EditRecipePresenter
@@ -55,17 +56,18 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
     val clickListener = View.OnClickListener {v ->
         when(v){
             addRecipeButton ->{
+
                 presenter?.saveRecipe()
-                MainRepository.onBack?.invoke()
                 MainRepository.selectedRecipe = null
+                findNavController().popBackStack(R.id.recipesFragment, false)
             }
             backButton ->{
-                MainRepository.onBack?.invoke()
+                findNavController().popBackStack(R.id.recipesFragment, false)
                 MainRepository.selectedRecipe = null
             }
             addIngredientsButton ->{
-                MainRepository.onEditIngredients?.invoke()
-                Log.d("mLog", "Click")
+                MainRepository.selectedRecipe = presenter?.recipe
+                findNavController().navigate(R.id.editIngredientsFragment)
             }
         }
     }

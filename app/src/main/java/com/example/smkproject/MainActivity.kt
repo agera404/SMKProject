@@ -1,12 +1,17 @@
 package com.example.smkproject
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.util.Log
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
+import androidx.navigation.NavController
+import androidx.navigation.NavController.OnDestinationChangedListener
+import androidx.navigation.fragment.NavHostFragment
 import com.example.smkproject.common.DBHelper
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.presenters.MainPresenter
@@ -19,7 +24,9 @@ import kotlinx.android.synthetic.main.toolbar.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,  MainView{
     private var dbHelper: DBHelper? = null
     private var presenter: MainPresenter?= null
-    var navOptions: NavOptions? = null
+
+    var navHostFragment: NavHostFragment? = null
+    var navController: NavController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +35,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dbHelper = DBHelper(context = this)
         presenter = MainPresenter(this, dbHelper!!)
 
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment!!.navController
 
-        navOptions = NavOptions.Builder().setPopUpTo(R.id.recipesFragment, true).build()
+        navController!!.addOnDestinationChangedListener(OnDestinationChangedListener { controller, destination, arguments ->
+            var bt= findViewById<ImageButton>(R.id.editRecipeMenuButton)
+            if (destination.id == R.id.recipeFragment) {
+                bt.visibility = View.VISIBLE
+                Log.d("mLog","set visible")
+            } else{
+                bt.visibility = View.INVISIBLE
+            }
+        })
+
 
         openNavigationMenuButton.setOnClickListener(onClickListener)
         editRecipeMenuButton.setOnClickListener(onClickListener)
@@ -47,7 +65,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 else drawerLayout.closeDrawer(Gravity.RIGHT)
             }
             editRecipeMenuButton ->{
-                navigateTo(EDITRECIPE_FRAGMENT)
+                navController?.navigate(R.id.editRecipeFragment)
             }
         }
     }
@@ -58,6 +76,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         for (t in MainRepository.tags){
             if (t.id.toInt() == item.itemId){
                 presenter?.showRecipes(t.id)
+                navController?.popBackStack()
+                navController?.navigate(R.id.recipesFragment)
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
@@ -69,28 +89,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    override val RECIPES_FRAGMENT = 0
-    override val RECIPE_FRAGMENT = 1
-    override val EDITRECIPE_FRAGMENT = 2
-    override val EDITINGREDIENT_FRAGMENT = 3
 
-    override fun navigateTo(i: Int){
-        when(i){
-            RECIPE_FRAGMENT -> {
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.recipeFragment,null, navOptions)
-            }
-            RECIPES_FRAGMENT ->{
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.recipesFragment,null, navOptions)
-            }
-            EDITRECIPE_FRAGMENT ->{
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.editRecipeFragment, null, navOptions)
-            }
-            EDITINGREDIENT_FRAGMENT ->{
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.editIngredientsFragment, null, navOptions)
-            }
-        }
-
-    }
 
     override fun updateMenu() {
         var menu = nav_view.menu
@@ -112,11 +111,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(item?.itemId){
             R.id.allRecipeItemMenu -> {
                 presenter?.showRecipes(MainRepository.ID_TAG_ALLRECIPE)
+                navController?.popBackStack()
+                navController?.navigate(R.id.recipesFragment)
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
             R.id.newRecipeItemMenu -> {
                 MainRepository.selectedRecipe = null
-                presenter?.addNewRecipe()
+                navController?.navigate(R.id.editRecipeFragment)
                 drawerLayout.closeDrawer(GravityCompat.START)
 
             }

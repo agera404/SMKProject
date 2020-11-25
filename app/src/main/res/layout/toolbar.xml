@@ -29,6 +29,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/ic_edit"
                 android:layout_gravity="end"
+                android:visibility="invisible"
                 />
 
 

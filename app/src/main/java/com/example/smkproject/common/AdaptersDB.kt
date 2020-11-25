@@ -111,6 +111,7 @@ class RecipesDB(_dbHelper: DBHelper?) {
         if (!findRecipe(recipe.id))
             return db.insert(DBHelper.TABLE_RECIPES, null, contentValues);
         else{
+            Log.d("mLog","update: ${recipe.title} ingredients count: ${recipe.ingredients.count()}")
             db.update(DBHelper.TABLE_RECIPES, contentValues, "$KEY_ID = ${recipe.id}", null)
             return recipe.id
         }
@@ -122,7 +123,6 @@ class RecipesDB(_dbHelper: DBHelper?) {
         if (cursor.moveToFirst()){
             do {
                 var idRecipe = cursor.getLong(cursor.getColumnIndex(KEY_ID))
-                Log.d("mLog", "heeeeeeeeey $idRecipe")
                 if (id == idRecipe) return true
             }while (cursor.moveToNext())
         }
@@ -136,13 +136,13 @@ class RecipesDB(_dbHelper: DBHelper?) {
         for (_tag in recipe.tags.split(",").toTypedArray()) {
             var tag = _tag.replace(" ", "")
             idTag = TagsAdapterDB(dbHelper).getIdTag(tag)
-            TagsAdapterDB(dbHelper).updateCount(idTag, true)
+            if (recipe.id<0)TagsAdapterDB(dbHelper).updateCount(idTag, true)
             RecipeTagDB(dbHelper).insert(idRecipe, idTag)
         }
         var idIngr: Long = -1
         for (i in recipe.ingredients) {
             idIngr = IngredientsDB(dbHelper).getId(i.ingredient)
-            IngredientsDB(dbHelper).updateCount(idIngr, true)
+            if (recipe.id<0)IngredientsDB(dbHelper).updateCount(idIngr, true)
             RecipeIngredientDB(dbHelper).insert(idRecipe, idIngr, i.amount, i.unit)
         }
     }

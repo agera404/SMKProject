@@ -10,42 +10,42 @@
         android:name="com.example.smkproject.RecipesFragment"
         android:label="fragment_recipes"
         tools:layout="@layout/fragment_recipes">
-            <action
-                android:id="@+id/action_to_editRecipeFragment"
-                app:destination="@id/editRecipeFragment"/>
-            <action
-                android:id="@+id/action_to_recipeFragment"
-                app:destination="@+id/recipeFragment"/>
+            <action android:id="@+id/action_to_recipeFragment"
+                    app:destination="@id/recipeFragment"/>
+            <action android:id="@+id/action_to_editRecipeFragment"
+                    app:destination="@id/editRecipeFragment"/>
+            <action android:id="@+id/action_to_updateRecipes"
+                    app:popUpTo="@id/recipesFragment"/>
     </fragment>
     <fragment
         android:id="@+id/editRecipeFragment"
         android:name="com.example.smkproject.EditRecipeFragment"
         android:label="fragment_edit_recipe"
         tools:layout="@layout/fragment_edit_recipe">
-            <action
-                android:id="@+id/action_to_recipeFragment"
-                app:destination="@+id/recipeFragment"/>
-            <action
-                android:id="@+id/action_to_editIngredientsFragment"
-                app:destination="@+id/editIngredientsFragment"/>
+            <action android:id="@+id/action_to_homeScreen"
+                    app:popUpTo="@id/recipesFragment"/>
+            <action android:id="@+id/action_to_recipeFragment"
+                    app:popUpTo="@id/recipeFragment"/>
+            <action android:id="@+id/action_to_editIngredientFragment"
+                    app:destination="@id/editIngredientsFragment"/>
     </fragment>
     <fragment
         android:id="@+id/recipeFragment"
         android:name="com.example.smkproject.RecipeFragment"
         android:label="fragment_recipe"
         tools:layout="@layout/fragment_recipe">
-        <action
-            android:id="@+id/action_to_editRecipeFragment"
-            app:destination="@id/editRecipeFragment"/>
+            <action android:id="@+id/action_to_homeScreen"
+                    app:popUpTo="@id/recipesFragment"/>
+            <action android:id="@+id/action_to_editIngredientFragment"
+                    app:destination="@id/editRecipeFragment"/>
     </fragment>
     <fragment
         android:id="@+id/editIngredientsFragment"
         android:name="com.example.smkproject.EditIngredientsFragment"
         android:label="fragment_edit_ingredients"
-        tools:layout="@layout/fragment_edit_ingredients" />
-
-    <action
-        android:id="@+id/action_to_recipesFragment"
-        app:destination="@+id/recipesFragment"/>
+        tools:layout="@layout/fragment_edit_ingredients">
+            <action android:id="@+id/action_to_editRecipeFragment"
+                    app:popUpTo="@id/editRecipeFragment"/>
+    </fragment>
 
 </navigation>

@@ -1,11 +1,9 @@
 package com.example.smkproject.common
 
-import android.os.Parcelable
-import android.os.ProxyFileDescriptorCallback
-import com.example.smkproject.models.Ingredient
+import android.util.Log
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.models.Tag
-import kotlinx.android.parcel.Parcelize
+
 
 
 object MainRepository {
@@ -21,34 +19,22 @@ object MainRepository {
 
     val ID_TAG_ALLRECIPE: Long = -1
 
-    var onBack: (() -> Unit)? = null
-    var openRecipe: (() -> Unit)? = null
-    var onEditIngredients: (() -> Unit)? = null
-    var onEditRecipe: (() -> Unit)? = null
-    var setIngredient:((Ingredient) -> Unit)? = null
-    var currentIngredient: Ingredient? = null
-    get() = field
-    set(value) {
-        if(value != null){
-            field = value
-            setIngredient?.invoke(field!!)
-        }
-    }
-
     var selectedRecipe: Recipe? = null
     var currentIdTag: Long = ID_TAG_ALLRECIPE // когда id < 0 показывает все рецепты
+
+    var updateMenu: (()->Unit)? = null
 
 
     private fun updateArrays() {
         allRecipes = loadRecipes()
         tags = loadTags()
+        updateMenu?.invoke()
     }
 
     fun saveRecipe(recipe: Recipe) {
         var adapterDB = RecipesDB(dbHelper)
         adapterDB.saveRecipe(recipe!!)
-        tags = loadTags()
-        allRecipes = loadRecipes()
+        updateArrays()
     }
 
     fun getRecipesByTag(idTag: Long): ArrayList<Recipe> {
@@ -69,6 +55,7 @@ object MainRepository {
             if (recipe.id == id)
                 selectedRecipe = recipe
         }
+        Log.d("mLog", "Выбранный рецепт: ${selectedRecipe?.title} ingredients count :${selectedRecipe?.ingredients?.count()}")
     }
 
     fun loadTags(): ArrayList<Tag> {

@@ -10,9 +10,8 @@ import com.example.smkproject.views.RecipesView
 
 class RecipesPresenter(var view: RecipesView){
 
-    fun openRecipe(idRecipe: Long){
+    fun selectRecipe(idRecipe: Long){
         MainRepository.setSelectedRecipe(idRecipe)
-        MainRepository.openRecipe?.invoke()
     }
 
     fun showRecipes(){

@@ -29,10 +29,7 @@ class Recipe() : Parcelable {
         dateTime = _dateTime
         tags = _tags
         ingredients = _ingredients
-        for (i in ingredients) {
-            stringIngredient += "${i.ingredient} (${i.amount} ${i.unit}), "
-        }
-        stringIngredient = stringIngredient.dropLast(2)
+        ingrToStr()
     }
 
     constructor(
@@ -49,8 +46,18 @@ class Recipe() : Parcelable {
         dateTime = _dateTime
         tags = _tags
         stringIngredient = _ingredients
-        for (i in stringIngredient.split(",").toTypedArray()) {
+        strToIngr()
+    }
 
+    fun ingrToStr(){
+        stringIngredient = ""
+        for (i in ingredients) {
+            stringIngredient += "${i.ingredient} (${i.amount} ${i.unit}), "
+        }
+        stringIngredient = stringIngredient.dropLast(2)
+    }
+    fun strToIngr(){
+        for (i in stringIngredient.split(",").toTypedArray()) {
             var tempAmount = i.substringAfter("(").substringBefore(" ").replace(" ", "")
             if(tempAmount.isNotEmpty())
             {
@@ -59,9 +66,7 @@ class Recipe() : Parcelable {
                 var unit = i.substringAfter("(").substringAfter(" ").dropLast(1)
                 ingredients.add(Ingredient(ingr, amount, unit))
             }
-
         }
-
     }
 
 

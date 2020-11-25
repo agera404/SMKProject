@@ -3,12 +3,14 @@ package com.example.smkproject
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.models.Ingredient
 import com.example.smkproject.presenters.EditIngredientsPresenter
@@ -65,11 +67,12 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
                 newIngredientView()
             }
             saveIngredientsButton->{
+                presenter?.ingredients = arrayListOf()
                 for (element in listIngredients.children){
                     saveIngredient(element)
                 }
-                MainRepository.selectedRecipe!!.ingredients = presenter!!.ingredients
-                MainRepository.onEditRecipe?.invoke()
+                presenter?.onDestroy()
+                findNavController().popBackStack(R.id.editRecipeFragment, false)
             }
         }
     }
@@ -119,11 +122,8 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
         var amount = (view.children.elementAt(indexAmount) as EditText).text.toString().toDouble()
         var unit = (view.children.elementAt(indexSpinner) as Spinner).selectedItem.toString()
 
-        if (title.isEmpty() || amount<0 || amount.isNaN() || unit.isEmpty()) {
-            Toast.makeText(context, R.string.error_fild_is_empty, Toast.LENGTH_SHORT).show()
-        }else{
-            MainRepository.currentIngredient = Ingredient(title,amount,unit)
-        }
+
+        presenter?.ingredients?.add(Ingredient(title,amount,unit))
     }
     override fun loadIngredient(title: String, amount: Double, unit: String){
         ingredientET?.setText(title)
