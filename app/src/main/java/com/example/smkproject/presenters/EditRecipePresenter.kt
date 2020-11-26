@@ -16,7 +16,7 @@ class EditRecipePresenter(var view: EditRecipeView) {
         if (MainRepository.selectedRecipe != null) {
             recipe = MainRepository.selectedRecipe
         }else{
-            recipe = Recipe(-1,"","","","", arrayListOf())
+            recipe = Recipe(null, "","","","","")
         }
 
     }
@@ -30,9 +30,9 @@ class EditRecipePresenter(var view: EditRecipeView) {
 
     fun saveRecipe() {
         recipe?.ingredients  = MainRepository.selectedRecipe?.ingredients!!
-        recipe?.stringIngredient = MainRepository.selectedRecipe!!.stringIngredient
+       //recipe?.stringIngredient = MainRepository.selectedRecipe!!.stringIngredient
 
-        if (recipe?.title?.length!! > 0 && recipe?.describ?.length!! > 0 && recipe?.tags?.length!! > 0 && recipe?.ingredients!!.count() > 0) {
+        if (recipe?.title?.length!! > 0 && recipe?.describe?.length!! > 0 && recipe?.tags?.length!! > 0 && recipe?.ingredients!!.count() > 0) {
             val currentDate = Date()
             val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
             val date = dateFormat.format(currentDate)

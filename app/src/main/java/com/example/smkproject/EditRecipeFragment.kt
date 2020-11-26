@@ -46,10 +46,10 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
 
         if(presenter!!.isRecipeNotNull()){
             titleRecipeET.setText(presenter!!.recipe?.title)
-            describRecipeET.setText(presenter!!.recipe?.describ)
+            describRecipeET.setText(presenter!!.recipe?.describe)
             tagsET.setText(presenter!!.recipe?.tags)
-            ingredientsTVInEdtitRecipe.setText(presenter!!.recipe?.stringIngredient)
-            ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
+            //ingredientsTVInEdtitRecipe.setText(presenter!!.recipe?.stringIngredient)
+            //ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
         }
         
     }
@@ -78,7 +78,7 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
             }
             if(describRecipeET.getText().hashCode() == s.hashCode()){
 
-                presenter?.recipe?.describ = describRecipeET.text.toString()
+                presenter?.recipe?.describe = describRecipeET.text.toString()
             }
             if(tagsET.getText().hashCode() == s.hashCode()){
 

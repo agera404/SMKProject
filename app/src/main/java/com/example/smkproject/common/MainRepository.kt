@@ -1,19 +1,20 @@
 package com.example.smkproject.common
 
-import android.util.Log
+import android.app.Application
+import androidx.room.Room
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.models.Tag
 
 
+object MainRepository: Application() {
 
-object MainRepository {
-    var dbHelper: DBHelper? = null
-        get() = field
-        set(value) {
-            field = value
-            allRecipes = loadRecipes()
-            tags = loadTags()
-        }
+    val db: DataBase? = null
+    init {
+        val db: DataBase = Room.databaseBuilder(
+            applicationContext,
+            DataBase::class.java, "database"
+        ).build()
+    }
     lateinit var allRecipes: ArrayList<Recipe>
     lateinit var tags: ArrayList<Tag>
 
@@ -31,23 +32,37 @@ object MainRepository {
         updateMenu?.invoke()
     }
 
+    fun deleteRecipe(idRecipe: Long){
+        if (db != null){
+            val recipeDao = db.recipeDao()
+            val recipe = recipeDao.getById(idRecipe)
+            recipeDao.delete(recipe)
+            updateArrays()
+        }
+    }
+
     fun saveRecipe(recipe: Recipe) {
-        var adapterDB = RecipesDB(dbHelper)
-        adapterDB.saveRecipe(recipe!!)
-        updateArrays()
+        if (db != null){
+            val recipeDao = db.recipeDao()
+            recipeDao.insert(recipe)
+            updateArrays()
+        }
     }
 
     fun getRecipesByTag(idTag: Long): ArrayList<Recipe> {
-
-        for (tag in tags) {
-            if (tag.id == idTag) return tag.recipes
+        if (db != null){
+            val recipeTagDao = db.recipeTagDao()
+            return recipeTagDao.getRecipesByTag(idTag = idTag) ?: arrayListOf<Recipe>()
         }
-        return allRecipes
+        return arrayListOf<Recipe>()
     }
 
     fun loadRecipes(): ArrayList<Recipe> {
-        val adapterDB = RecipesDB(dbHelper)
-        return adapterDB.loadRecipes()
+        if (db != null){
+            val recipeDao = db.recipeDao()
+            return recipeDao.getAll() ?: arrayListOf<Recipe>()
+        }
+        return arrayListOf<Recipe>()
     }
 
     fun setSelectedRecipe(id: Long) {
@@ -55,11 +70,13 @@ object MainRepository {
             if (recipe.id == id)
                 selectedRecipe = recipe
         }
-        Log.d("mLog", "Выбранный рецепт: ${selectedRecipe?.title} ingredients count :${selectedRecipe?.ingredients?.count()}")
     }
 
     fun loadTags(): ArrayList<Tag> {
-        val adapterDB = TagsAdapterDB(dbHelper)
-        return adapterDB.loadTags()
+        if (db != null){
+            val tagDao = db.tagDao()
+            return tagDao.getAll() ?: arrayListOf<Tag>()
+        }
+        return arrayListOf<Tag>()
     }
 }

@@ -10,6 +10,8 @@
     <string name="add_new_ingredient">Добавить ингредиент</string>
     <string name="save_ingredients">Сохранить ингредиенты</string>
     <string name="error_fild_is_empty">Заполните все поля</string>
+    <string name="delete_recipe">Удалить</string>
+
 
 
     <string-array name="unit">

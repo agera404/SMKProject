@@ -1,55 +1,20 @@
 package com.example.smkproject.models
 
-import android.os.Parcel
-import android.os.Parcelable
-import android.util.Log
-import kotlinx.android.parcel.Parcelize
+import androidx.room.*
 
-@Parcelize
-class Recipe() : Parcelable {
-    var id: Long = -1
-    var title: String = ""
-    var describ: String = ""
-    var dateTime: String = ""
-    var tags: String = ""
-    var ingredients = arrayListOf<Ingredient>()
-    var stringIngredient = ""
 
-    constructor(
-        _id: Long,
-        _title: String,
-        _describ: String,
-        _dateTime: String,
-        _tags: String,
-        _ingredients: ArrayList<Ingredient>
-    ) : this() {
-        id = _id
-        title = _title
-        describ = _describ
-        dateTime = _dateTime
-        tags = _tags
-        ingredients = _ingredients
-        ingrToStr()
-    }
+@Entity(tableName = "recipes")
+class Recipe(
+    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @ColumnInfo(name = "title") var title: String,
+    @ColumnInfo(name = "describe") var describe: String,
+    @ColumnInfo(name = "dateTime") val dateTime: String,
+    @ColumnInfo(name = "tags") var tags: String,
+    @ColumnInfo(name = "ingredients") var ingredients: String
+){
 
-    constructor(
-        _id: Long,
-        _title: String,
-        _describ: String,
-        _dateTime: String,
-        _tags: String,
-        _ingredients: String
-    ) : this() {
-        id = _id
-        title = _title
-        describ = _describ
-        dateTime = _dateTime
-        tags = _tags
-        stringIngredient = _ingredients
-        strToIngr()
-    }
 
-    fun ingrToStr(){
+    /*fun ingrToStr(){
         stringIngredient = ""
         for (i in ingredients) {
             stringIngredient += "${i.ingredient} (${i.amount} ${i.unit}), "
@@ -67,8 +32,23 @@ class Recipe() : Parcelable {
                 ingredients.add(Ingredient(ingr, amount, unit))
             }
         }
-    }
+    }*/
+}
+@Dao
+interface RecipeDao{
+    @Query("SELECT * FROM recipes")
+    fun getAll(): ArrayList<Recipe>?
 
+    @Query("SELECT * FROM recipes WHERE id = :id")
+    fun getById(id: Long): Recipe?
 
+    @Insert
+    fun insert(recipe: Recipe?)
+
+    @Update
+    fun update(recipe: Recipe?)
+
+    @Delete
+    fun delete(recipe: Recipe?)
 }
 

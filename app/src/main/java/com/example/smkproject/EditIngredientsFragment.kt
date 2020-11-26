@@ -123,7 +123,7 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
         var unit = (view.children.elementAt(indexSpinner) as Spinner).selectedItem.toString()
 
 
-        presenter?.ingredients?.add(Ingredient(title,amount,unit))
+        presenter?.ingredients?.add(Ingredient(null,title,amount,unit))
     }
     override fun loadIngredient(title: String, amount: Double, unit: String){
         ingredientET?.setText(title)

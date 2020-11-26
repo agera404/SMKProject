@@ -1,5 +1,7 @@
 package com.example.smkproject
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import android.widget.TextView
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.smkproject.common.MainRepository
 import com.example.smkproject.presenters.RecipesPresenter
 import com.example.smkproject.views.RecipesView
 import kotlinx.android.synthetic.main.fragment_recipes.*
@@ -44,6 +47,22 @@ class RecipesFragment : Fragment(), RecipesView {
         presenter?.selectRecipe(idRecipe)
         findNavController().navigate(R.id.recipeFragment)
     }
+    var longClickListener =  View.OnLongClickListener { v ->
+        val items =
+            arrayOf<CharSequence>(getString(R.string.delete_recipe))
+
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+
+
+        builder.setItems(items,
+            DialogInterface.OnClickListener { dialog, item ->
+                var idRecipe  = v.tag.toString().toLong()
+                (v?.parent as ViewGroup).removeView(v)
+                MainRepository.deleteRecipe(idRecipe)
+            })
+        builder.show()
+        true
+    }
 
 
     override fun setRecipeOnLayout(id: Long, title: String, describ: String, tags: String) {
@@ -57,6 +76,7 @@ class RecipesFragment : Fragment(), RecipesView {
         (view.children.elementAt(indexTags) as TextView).text = tags
         view.tag =id.toString()
         view.setOnClickListener(clickListener)
+        view.setOnLongClickListener(longClickListener)
         recipesLayout.addView(view)
 
     }

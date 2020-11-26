@@ -12,7 +12,6 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavController.OnDestinationChangedListener
 import androidx.navigation.fragment.NavHostFragment
-import com.example.smkproject.common.DBHelper
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.presenters.MainPresenter
 import com.example.smkproject.views.MainView
@@ -22,7 +21,6 @@ import kotlinx.android.synthetic.main.toolbar.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,  MainView{
-    private var dbHelper: DBHelper? = null
     private var presenter: MainPresenter?= null
 
     var navHostFragment: NavHostFragment? = null
@@ -32,8 +30,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        dbHelper = DBHelper(context = this)
-        presenter = MainPresenter(this, dbHelper!!)
+        presenter = MainPresenter(this)
 
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment!!.navController

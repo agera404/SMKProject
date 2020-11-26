@@ -6,7 +6,7 @@ import com.example.smkproject.views.RecipeView
 class RecipePresenter(var view: RecipeView) {
     var recipe = MainRepository.selectedRecipe
     fun loadRecipe() {
-        view.setField(recipe!!.title, recipe!!.describ, recipe!!.stringIngredient, recipe!!.tags)
+        view.setField(recipe!!.title, recipe!!.describe, "", recipe!!.tags)
     }
 
 }

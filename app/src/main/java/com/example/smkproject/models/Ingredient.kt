@@ -1,14 +1,19 @@
 package com.example.smkproject.models
 
-class Ingredient(_ingredient: String, _amount: Double, _unit: String) {
-    var id:Long
-        get() {
-           return id
-        }
-        set(value) {
-            id = value
-        }
-    var ingredient = _ingredient
-    var amount = _amount
-    var unit = _unit
+import androidx.room.ColumnInfo
+import androidx.room.Dao
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "ingredients")
+class Ingredient(
+    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @ColumnInfo(name = "title")val title: String,
+    @ColumnInfo(name = "amount")val amount: Double,
+    @ColumnInfo(name = "unit")val unit: String) {
+
+}
+@Dao
+public interface IngredientDao{
+
 }

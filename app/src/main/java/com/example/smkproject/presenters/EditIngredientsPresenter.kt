@@ -9,18 +9,18 @@ class EditIngredientsPresenter(var view: EditIngredientsView) {
     var ingredients: ArrayList<Ingredient> = arrayListOf()
     init {
         if (MainRepository.selectedRecipe != null){
-            ingredients = MainRepository.selectedRecipe!!.ingredients
+            //ingredients = MainRepository.selectedRecipe!!.ingredients
         }
         Log.d("mLog", "EditIngredientsPresenter ingredients COUNT: ${ingredients.count()}")
     }
     fun setIngredients(){
         for (ingr in ingredients){
-            view.loadIngredient(ingr.ingredient, ingr.amount, ingr.unit)
+            //view.loadIngredient(ingr.ingredient, ingr.amount, ingr.unit)
         }
     }
     fun onDestroy(){
-        MainRepository.selectedRecipe!!.ingredients = ingredients
-        MainRepository.selectedRecipe!!.ingrToStr()
+        //MainRepository.selectedRecipe!!.ingredients = ingredients
+        //MainRepository.selectedRecipe!!.ingrToStr()
         ingredients = arrayListOf()
     }
 }
