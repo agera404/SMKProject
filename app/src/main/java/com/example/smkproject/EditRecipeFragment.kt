@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.core.view.children
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
 import com.example.smkproject.R.id.titleRecipeET
 import com.example.smkproject.common.MainRepository
@@ -24,6 +25,7 @@ import kotlinx.android.synthetic.main.fragment_edit_recipe.*
 
 
 class EditRecipeFragment : Fragment(), EditRecipeView{
+    override var viewLifecycle: LifecycleOwner = viewLifecycleOwner
     private var presenter: EditRecipePresenter? = null
 
     override fun onCreateView(

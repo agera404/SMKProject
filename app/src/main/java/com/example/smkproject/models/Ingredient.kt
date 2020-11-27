@@ -14,6 +14,6 @@ class Ingredient(
 
 }
 @Dao
-public interface IngredientDao{
+interface IngredientDao{
 
 }

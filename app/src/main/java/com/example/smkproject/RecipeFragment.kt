@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.lifecycle.LifecycleOwner
 import com.example.smkproject.models.Ingredient
 import com.example.smkproject.presenters.RecipePresenter
 import com.example.smkproject.views.RecipeView
@@ -15,7 +16,6 @@ import kotlinx.android.synthetic.main.fragment_recipe.*
 
 
 class RecipeFragment : Fragment(), RecipeView {
-
     var presenter: RecipePresenter? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

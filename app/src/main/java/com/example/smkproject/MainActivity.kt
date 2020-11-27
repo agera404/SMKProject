@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavController.OnDestinationChangedListener
 import androidx.navigation.fragment.NavHostFragment
@@ -21,6 +22,9 @@ import kotlinx.android.synthetic.main.toolbar.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,  MainView{
+
+     override var viewLifecycle: Lifecycle? = null
+
     private var presenter: MainPresenter?= null
 
     var navHostFragment: NavHostFragment? = null
@@ -29,14 +33,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        viewLifecycle = lifecycle
+        MainRepository.context= this@MainActivity
         presenter = MainPresenter(this)
 
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment!!.navController
 
         navController!!.addOnDestinationChangedListener(OnDestinationChangedListener { controller, destination, arguments ->
-            var bt= findViewById<ImageButton>(R.id.editRecipeMenuButton)
+            val bt= findViewById<ImageButton>(R.id.editRecipeMenuButton)
             if (destination.id == R.id.recipeFragment) {
                 bt.visibility = View.VISIBLE
                 Log.d("mLog","set visible")
@@ -70,7 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        for (t in MainRepository.tags){
+        for (t in presenter?.tags!!){
             if (t.id.toInt() == item.itemId){
                 presenter?.showRecipes(t.id)
                 navController?.popBackStack()
@@ -93,15 +98,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         menu.removeGroup(1)
         createMenu()
     }
+
+
+
     override fun createMenu(){
         var menu = nav_view.menu
         var subM0 = menu.addSubMenu(1,1,1,"Tags")
 
-        for (t in MainRepository.tags){
+        for (t in presenter?.tags!!){
             var title = "${t.tag} (${t.count})"
             subM0.add(0, t.id.toInt(),0, title)
         }
-
     }
 
     fun onMenuItemClick(item: MenuItem?): Boolean {

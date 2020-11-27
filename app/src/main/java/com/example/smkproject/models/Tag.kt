@@ -1,5 +1,7 @@
 package com.example.smkproject.models
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 @Entity(tableName = "tags")
@@ -11,9 +13,9 @@ class Tag(
 }
 
 @Dao
-public interface TagDao{
+interface TagDao{
     @Query("SELECT * FROM tags")
-    fun getAll(): ArrayList<Tag>?
+    fun getAll(): LiveData<List<Tag>>?
 
     @Query("SELECT * FROM tags WHERE id = :id")
     fun getById(id: Long): Tag?

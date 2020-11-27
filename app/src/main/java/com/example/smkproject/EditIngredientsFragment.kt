@@ -105,13 +105,13 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
         ingredientET = (view as LinearLayout).children.elementAt(indexTitle) as EditText
         ingredientET?.addTextChangedListener(textWatcher)
 
-        amountET = (view as LinearLayout).children.elementAt(indexAmount) as EditText
+        amountET = view.children.elementAt(indexAmount) as EditText
         amountET?.addTextChangedListener(textWatcher)
 
-        delIngrButton = (view as LinearLayout).children.elementAt(indexButt) as Button
+        delIngrButton = view.children.elementAt(indexButt) as Button
         delIngrButton?.setOnClickListener(clickListener)
 
-        unitSpinner = (view as LinearLayout).children.elementAt(indexSpinner) as Spinner
+        unitSpinner = view.children.elementAt(indexSpinner) as Spinner
         countIngr += 1
         listIngredients.addView(view)
     }

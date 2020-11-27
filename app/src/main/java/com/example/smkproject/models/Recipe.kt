@@ -1,5 +1,7 @@
 package com.example.smkproject.models
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 
@@ -37,7 +39,7 @@ class Recipe(
 @Dao
 interface RecipeDao{
     @Query("SELECT * FROM recipes")
-    fun getAll(): ArrayList<Recipe>?
+    fun getAll(): LiveData<List<Recipe>>
 
     @Query("SELECT * FROM recipes WHERE id = :id")
     fun getById(id: Long): Recipe?

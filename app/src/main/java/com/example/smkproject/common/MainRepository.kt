@@ -1,82 +1,74 @@
 package com.example.smkproject.common
 
 import android.app.Application
+import android.content.Context
+import androidx.lifecycle.*
 import androidx.room.Room
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.models.Tag
 
 
-object MainRepository: Application() {
+object MainRepository{
 
-    val db: DataBase? = null
-    init {
-        val db: DataBase = Room.databaseBuilder(
-            applicationContext,
+    var db: DataBase? = null
+    var context:Context? = null
+        set(value) {
+        field = value
+        db = Room.databaseBuilder(
+            field!!,
             DataBase::class.java, "database"
         ).build()
     }
-    lateinit var allRecipes: ArrayList<Recipe>
-    lateinit var tags: ArrayList<Tag>
+    init {
+
+
+    }
 
     val ID_TAG_ALLRECIPE: Long = -1
 
     var selectedRecipe: Recipe? = null
+        set(value) {field = value}
     var currentIdTag: Long = ID_TAG_ALLRECIPE // когда id < 0 показывает все рецепты
 
     var updateMenu: (()->Unit)? = null
 
 
     private fun updateArrays() {
-        allRecipes = loadRecipes()
-        tags = loadTags()
         updateMenu?.invoke()
     }
 
     fun deleteRecipe(idRecipe: Long){
-        if (db != null){
-            val recipeDao = db.recipeDao()
-            val recipe = recipeDao.getById(idRecipe)
-            recipeDao.delete(recipe)
-            updateArrays()
-        }
+
+        val recipeDao = db?.recipeDao()
+        val recipe = recipeDao?.getById(idRecipe)
+        recipeDao?.delete(recipe)
+        updateArrays()
     }
 
     fun saveRecipe(recipe: Recipe) {
-        if (db != null){
-            val recipeDao = db.recipeDao()
-            recipeDao.insert(recipe)
-            updateArrays()
-        }
+        val recipeDao = db?.recipeDao()
+        recipeDao?.insert(recipe)
+        updateArrays()
+
     }
 
-    fun getRecipesByTag(idTag: Long): ArrayList<Recipe> {
-        if (db != null){
-            val recipeTagDao = db.recipeTagDao()
-            return recipeTagDao.getRecipesByTag(idTag = idTag) ?: arrayListOf<Recipe>()
-        }
-        return arrayListOf<Recipe>()
+    fun getRecipesByTag(idTag: Long): List<Recipe> {
+
+        val recipeTagDao = db?.recipeTagDao()
+        return recipeTagDao?.getRecipesByTag(idTag = idTag) ?: arrayListOf<Recipe>()
     }
 
-    fun loadRecipes(): ArrayList<Recipe> {
-        if (db != null){
-            val recipeDao = db.recipeDao()
-            return recipeDao.getAll() ?: arrayListOf<Recipe>()
-        }
-        return arrayListOf<Recipe>()
+    fun loadRecipes(): LiveData<List<Recipe>>? {
+        val recipeDao = db?.recipeDao()
+        val recipes = recipeDao?.getAll()
+        return recipes
+
     }
 
-    fun setSelectedRecipe(id: Long) {
-        for (recipe in allRecipes) {
-            if (recipe.id == id)
-                selectedRecipe = recipe
-        }
+
+    fun loadTags(): LiveData<List<Tag>>? {
+        val tagDao = db?.tagDao()
+        return tagDao?.getAll()
     }
 
-    fun loadTags(): ArrayList<Tag> {
-        if (db != null){
-            val tagDao = db.tagDao()
-            return tagDao.getAll() ?: arrayListOf<Tag>()
-        }
-        return arrayListOf<Tag>()
-    }
 }

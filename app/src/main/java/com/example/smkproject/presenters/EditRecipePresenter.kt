@@ -1,15 +1,17 @@
 package com.example.smkproject.presenters
 
 import android.util.Log
+import androidx.lifecycle.Lifecycle
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.models.Ingredient
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.views.EditRecipeView
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditRecipePresenter(var view: EditRecipeView) {
-
+class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
+    private var viewLifecycle: Lifecycle? = null
     var recipe: Recipe? = null
 
     init {
@@ -18,6 +20,8 @@ class EditRecipePresenter(var view: EditRecipeView) {
         }else{
             recipe = Recipe(null, "","","","","")
         }
+        this.viewLifecycle = view.viewLifecycle.lifecycle
+        viewLifecycle?.addObserver(this)
 
     }
 
@@ -36,20 +40,11 @@ class EditRecipePresenter(var view: EditRecipeView) {
             val currentDate = Date()
             val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
             val date = dateFormat.format(currentDate)
+            launch {
+                MainRepository.saveRecipe(recipe!!)
+            }
 
-            MainRepository.saveRecipe(recipe!!)
         }
     }
-
-    fun sortTags(tags: String): String {
-        var array = tags.split(",").toTypedArray()
-        array = array.sortedArray()
-        var newTags = ""
-        for (t in array) {
-            newTags = t + ", "
-        }
-        return newTags.dropLast(2)
-    }
-
 
 }

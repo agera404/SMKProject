@@ -16,11 +16,11 @@ import androidx.room.*
 ))
 class RecipeIngredient(
     @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo(name = "recipe_id")val recipe_id: Long,
-    @ColumnInfo(name = "ingredient_id") val ingredient_id: Long
+    @ColumnInfo(name = "recipe_id", index = true)val recipe_id: Long,
+    @ColumnInfo(name = "ingredient_id", index = true) val ingredient_id: Long
 ) {
 }
 @Dao
-public interface RecipeIngredientDao{
+interface RecipeIngredientDao{
 
 }

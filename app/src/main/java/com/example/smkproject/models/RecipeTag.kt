@@ -16,12 +16,12 @@ import androidx.room.*
 ))
 class RecipeTag(
     @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo(name = "recipe_id")val recipe_id: Long,
-    @ColumnInfo(name = "tag_id") val tag_id: Long
+    @ColumnInfo(name = "recipe_id", index = true)val recipe_id: Long,
+    @ColumnInfo(name = "tag_id", index = true) val tag_id: Long
 ) {
 }
 @Dao
-public interface RecipeTagDao{
+interface RecipeTagDao{
     @Query("SELECT * FROM recipe_tag LEFT JOIN recipes ON recipe_tag.recipe_id = recipes.id WHERE recipe_tag.tag_id = :idTag")
-    fun getRecipesByTag(idTag: Long): ArrayList<Recipe>?
+    fun getRecipesByTag(idTag: Long): List<Recipe>?
 }

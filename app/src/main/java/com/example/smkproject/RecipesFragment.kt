@@ -11,6 +11,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.presenters.RecipesPresenter
@@ -19,6 +21,8 @@ import kotlinx.android.synthetic.main.fragment_recipes.*
 
 
 class RecipesFragment : Fragment(), RecipesView {
+
+    override var viewLifecycle: LifecycleOwner? = null
     private var presenter: RecipesPresenter? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -26,14 +30,11 @@ class RecipesFragment : Fragment(), RecipesView {
         presenter?.showRecipes()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewLifecycle = viewLifecycleOwner
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_recipes, container, false)
     }
@@ -43,7 +44,6 @@ class RecipesFragment : Fragment(), RecipesView {
     var clickListener = View.OnClickListener{v ->
         var tag = v.tag.toString()
         var idRecipe = tag.toLong()
-        Log.d("mLog", "$tag - $idRecipe")
         presenter?.selectRecipe(idRecipe)
         findNavController().navigate(R.id.recipeFragment)
     }
@@ -58,11 +58,13 @@ class RecipesFragment : Fragment(), RecipesView {
             DialogInterface.OnClickListener { dialog, item ->
                 var idRecipe  = v.tag.toString().toLong()
                 (v?.parent as ViewGroup).removeView(v)
-                MainRepository.deleteRecipe(idRecipe)
+                presenter?.deleteRecipe(idRecipe)
             })
         builder.show()
         true
     }
+
+
 
 
     override fun setRecipeOnLayout(id: Long, title: String, describ: String, tags: String) {
