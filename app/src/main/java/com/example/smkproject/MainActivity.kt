@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             editRecipeMenuButton ->{
                 navController?.navigate(R.id.editRecipeFragment)
+
             }
         }
     }

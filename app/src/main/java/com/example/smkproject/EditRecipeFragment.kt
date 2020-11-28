@@ -22,10 +22,11 @@ import com.example.smkproject.common.MainRepository
 import com.example.smkproject.presenters.EditRecipePresenter
 import com.example.smkproject.views.EditRecipeView
 import kotlinx.android.synthetic.main.fragment_edit_recipe.*
+import java.lang.Exception
 
 
 class EditRecipeFragment : Fragment(), EditRecipeView{
-    override var viewLifecycle: LifecycleOwner = viewLifecycleOwner
+    override var viewLifecycle: LifecycleOwner? = null
     private var presenter: EditRecipePresenter? = null
 
     override fun onCreateView(
@@ -38,6 +39,7 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         presenter = EditRecipePresenter(this)
+        viewLifecycle = viewLifecycleOwner
 
         addRecipeButton.setOnClickListener(clickListener)
         backButton.setOnClickListener(clickListener)
@@ -58,7 +60,6 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
     val clickListener = View.OnClickListener {v ->
         when(v){
             addRecipeButton ->{
-
                 presenter?.saveRecipe()
                 MainRepository.selectedRecipe = null
                 findNavController().popBackStack(R.id.recipesFragment, false)

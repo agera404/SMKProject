@@ -12,7 +12,7 @@ abstract class BasePresenter: CoroutineScope, ViewModel(), LifecycleObserver {
 
     private var job: Job = Job()
     override  val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
+        get() = job + Dispatchers.IO
 }
 
 class RecipesPresenter(var view: RecipesView): BasePresenter(){

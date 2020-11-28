@@ -2,6 +2,7 @@ package com.example.smkproject.common
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.room.Room
 import com.example.smkproject.models.Recipe
@@ -14,10 +15,7 @@ object MainRepository{
     var context:Context? = null
         set(value) {
         field = value
-        db = Room.databaseBuilder(
-            field!!,
-            DataBase::class.java, "database"
-        ).build()
+        db = DataBase.getDatabase(field!!)
     }
     init {
 
@@ -46,8 +44,10 @@ object MainRepository{
     }
 
     fun saveRecipe(recipe: Recipe) {
+        Log.d("mLog", "${recipe != null}")
         val recipeDao = db?.recipeDao()
         recipeDao?.insert(recipe)
+        Log.d("mLog", "db : ${db != null}")
         updateArrays()
 
     }

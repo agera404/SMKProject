@@ -7,14 +7,13 @@ import androidx.room.*
 
 @Entity(tableName = "recipes")
 class Recipe(
-    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "title") var title: String,
     @ColumnInfo(name = "describe") var describe: String,
     @ColumnInfo(name = "dateTime") val dateTime: String,
     @ColumnInfo(name = "tags") var tags: String,
     @ColumnInfo(name = "ingredients") var ingredients: String
 ){
-
 
     /*fun ingrToStr(){
         stringIngredient = ""
