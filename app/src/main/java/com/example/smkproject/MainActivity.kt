@@ -53,10 +53,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         openNavigationMenuButton.setOnClickListener(onClickListener)
         editRecipeMenuButton.setOnClickListener(onClickListener)
-
-        createMenu()
         presenter!!.showRecipes(MainRepository.ID_TAG_ALLRECIPE)
         nav_view.setNavigationItemSelectedListener(this)
+        /*do{
+
+            if (presenter!!.tags != null && presenter!!.tags?.count()!! > 0){
+                createMenu()
+                break
+            }
+        }while (presenter!!.tags == null || presenter!!.tags?.count() ==0)*/
+
 
     }
 
@@ -77,8 +83,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         for (t in presenter?.tags!!){
-            if (t.id.toInt() == item.itemId){
-                presenter?.showRecipes(t.id)
+            if (t.id?.toInt()!!  == item.itemId){
+                presenter?.showRecipes(t.id!!)
                 navController?.popBackStack()
                 navController?.navigate(R.id.recipesFragment)
             }
@@ -103,13 +109,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun createMenu(){
-        var menu = nav_view.menu
-        var subM0 = menu.addSubMenu(1,1,1,"Tags")
+        if (presenter?.tags !=null && presenter?.tags!!.count()>0){
+            var menu = nav_view.menu
+            var subM0 = menu.addSubMenu(1,1,1,"Tags")
 
-        for (t in presenter?.tags!!){
-            var title = "${t.tag} (${t.count})"
-            subM0.add(0, t.id.toInt(),0, title)
+            for (t in presenter?.tags!!){
+                var title = "${t.tag} (${t.count})"
+                subM0.add(0, t.id!!.toInt(),0, title)
+            }
         }
+
     }
 
     fun onMenuItemClick(item: MenuItem?): Boolean {

@@ -14,6 +14,16 @@ class Recipe(
     @ColumnInfo(name = "tags") var tags: String,
     @ColumnInfo(name = "ingredients") var ingredients: String
 ){
+    @Ignore
+    fun convertTags():ArrayList<Tag>{
+        var tagsList: ArrayList<Tag> = arrayListOf<Tag>()
+        var tagsStr = tags.split(",").toTypedArray()
+        for (t in tagsStr){
+            var _tag = t.trim(' ')
+            tagsList.add(Tag(id = null, tag = _tag, count = 1))
+        }
+        return tagsList
+    }
 
     /*fun ingrToStr(){
         stringIngredient = ""
@@ -43,8 +53,8 @@ interface RecipeDao{
     @Query("SELECT * FROM recipes WHERE id = :id")
     fun getById(id: Long): Recipe?
 
-    @Insert
-    fun insert(recipe: Recipe?)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(recipe: Recipe?): Long
 
     @Update
     fun update(recipe: Recipe?)

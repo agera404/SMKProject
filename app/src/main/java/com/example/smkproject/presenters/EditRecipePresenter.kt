@@ -43,7 +43,6 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
             val date = dateFormat.format(currentDate)
             launch {
                 MainRepository.saveRecipe(recipe!!)
-                Log.d("mLog", "I'm saving recipe in coroutine")
             }
 
         //}

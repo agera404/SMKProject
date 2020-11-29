@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.room.Room
 import com.example.smkproject.models.Recipe
+import com.example.smkproject.models.RecipeTag
 import com.example.smkproject.models.Tag
 
 
@@ -44,10 +45,14 @@ object MainRepository{
     }
 
     fun saveRecipe(recipe: Recipe) {
-        Log.d("mLog", "${recipe != null}")
-        val recipeDao = db?.recipeDao()
-        recipeDao?.insert(recipe)
-        Log.d("mLog", "db : ${db != null}")
+        var idRecipe: Long? = db?.recipeDao()?.insert(recipe)
+        var tags = recipe.convertTags()
+        for (tag in tags){
+            var idTag = db?.tagDao()?.insert(tag)
+            if (idTag != null && idRecipe!=null){
+                db?.recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = idRecipe, tag_id = idTag))
+            }
+        }
         updateArrays()
 
     }
@@ -65,6 +70,12 @@ object MainRepository{
 
     }
 
+    fun getAnyTag(): Tag?{
+        val tagDao = db?.tagDao()
+        var tag = tagDao?.getAnyTag()
+        Log.d("mLog", "tag = ${tag?.tag}")
+        return tag
+    }
 
     fun loadTags(): LiveData<List<Tag>>? {
         val tagDao = db?.tagDao()
