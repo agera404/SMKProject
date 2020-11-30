@@ -23,8 +23,8 @@ class RecipeTag(
 @Dao
 interface RecipeTagDao{
     @Query("SELECT * FROM recipe_tag LEFT JOIN recipes ON recipe_tag.recipe_id = recipes.id WHERE recipe_tag.tag_id = :idTag")
-    fun getRecipesByTag(idTag: Long): List<Recipe>?
+    suspend fun getRecipesByTag(idTag: Long): List<Recipe>?
 
     @Insert
-    fun insert(recipe: RecipeTag?)
+    suspend fun insert(recipe: RecipeTag?)
 }

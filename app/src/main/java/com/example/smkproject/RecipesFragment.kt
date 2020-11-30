@@ -3,7 +3,6 @@ package com.example.smkproject
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
-import com.example.smkproject.common.MainRepository
 import com.example.smkproject.presenters.RecipesPresenter
 import com.example.smkproject.views.RecipesView
 import kotlinx.android.synthetic.main.fragment_recipes.*
@@ -22,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_recipes.*
 
 class RecipesFragment : Fragment(), RecipesView {
 
-    override var viewLifecycle: LifecycleOwner? = null
+
     private var presenter: RecipesPresenter? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -34,7 +30,7 @@ class RecipesFragment : Fragment(), RecipesView {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewLifecycle = viewLifecycleOwner
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_recipes, container, false)
     }

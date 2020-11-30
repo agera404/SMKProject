@@ -16,20 +16,20 @@ class Tag(
 interface TagDao{
 
     @Query("SELECT * FROM tags LIMIT 1")
-    fun getAnyTag(): Tag
+    suspend fun getAnyTag(): Tag
 
     @Query("SELECT * FROM tags")
-    fun getAll(): LiveData<List<Tag>>?
+    suspend fun getAll(): List<Tag>?
 
     @Query("SELECT * FROM tags WHERE id = :id")
-    fun getById(id: Long): Tag?
+    suspend fun getById(id: Long): Tag?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(tag: Tag?): Long
+    suspend fun insert(tag: Tag?): Long
 
     @Update
-    fun update(tag: Tag?)
+    suspend fun update(tag: Tag?)
 
     @Delete
-    fun delete(tag: Tag?)
+    suspend fun delete(tag: Tag?)
 }

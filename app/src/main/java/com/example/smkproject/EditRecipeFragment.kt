@@ -26,7 +26,6 @@ import java.lang.Exception
 
 
 class EditRecipeFragment : Fragment(), EditRecipeView{
-    override var viewLifecycle: LifecycleOwner? = null
     private var presenter: EditRecipePresenter? = null
 
     override fun onCreateView(
@@ -39,7 +38,6 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         presenter = EditRecipePresenter(this)
-        viewLifecycle = viewLifecycleOwner
 
         addRecipeButton.setOnClickListener(clickListener)
         backButton.setOnClickListener(clickListener)

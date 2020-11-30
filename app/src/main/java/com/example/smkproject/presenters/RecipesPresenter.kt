@@ -8,7 +8,7 @@ import com.example.smkproject.views.RecipesView
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-abstract class BasePresenter: CoroutineScope, ViewModel(), LifecycleObserver {
+abstract class BasePresenter: CoroutineScope{
 
     private var job: Job = Job()
     override  val coroutineContext: CoroutineContext
@@ -16,25 +16,11 @@ abstract class BasePresenter: CoroutineScope, ViewModel(), LifecycleObserver {
 }
 
 class RecipesPresenter(var view: RecipesView): BasePresenter(){
-    private var viewLifecycle: Lifecycle? = null
-    lateinit var recipes: List<Recipe>
-    var allRecipesLD: LiveData<List<Recipe>>? = null
+    var recipes: List<Recipe>? = arrayListOf()
 
-    init{
-        this.viewLifecycle = view.viewLifecycle?.lifecycle
-        viewLifecycle?.addObserver(this)
-        launch {
-            allRecipesLD?.observe(view.viewLifecycle!!, Observer <List<Recipe>>{
-                    allRecipes -> recipes
-            })
-            allRecipesLD = MainRepository.loadRecipes()
-
-        }
-
-    }
 
     fun selectRecipe(idRecipe: Long){
-        for (recipe in recipes){
+        for (recipe in recipes!!){
             if (recipe.id == idRecipe) MainRepository.selectedRecipe = recipe
         }
     }
@@ -46,13 +32,12 @@ class RecipesPresenter(var view: RecipesView): BasePresenter(){
     }
 
     fun showRecipes(){
-        launch {
-            recipes = MainRepository.getRecipesByTag(MainRepository.currentIdTag)
-            for (recipe in recipes){
-                view.setRecipeOnLayout(recipe.id!!, recipe.title, recipe.describe, recipe.tags)
-            }
+        runBlocking {
+            recipes = MainRepository.getRecipesByTag()
         }
-
+        for (recipe in recipes!!){
+            view.setRecipeOnLayout(recipe.id!!, recipe.title, recipe.describe, recipe.tags)
+        }
 
     }
 }

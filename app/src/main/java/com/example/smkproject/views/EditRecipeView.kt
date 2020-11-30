@@ -4,5 +4,5 @@ import androidx.lifecycle.LifecycleOwner
 
 
 interface EditRecipeView{
-    var viewLifecycle: LifecycleOwner?
+
 }

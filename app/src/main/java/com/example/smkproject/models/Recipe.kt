@@ -48,18 +48,18 @@ class Recipe(
 @Dao
 interface RecipeDao{
     @Query("SELECT * FROM recipes")
-    fun getAll(): LiveData<List<Recipe>>
+    suspend fun getAll(): List<Recipe>
 
     @Query("SELECT * FROM recipes WHERE id = :id")
-    fun getById(id: Long): Recipe?
+    suspend fun getById(id: Long): Recipe?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(recipe: Recipe?): Long
+    suspend fun insert(recipe: Recipe?): Long
 
     @Update
-    fun update(recipe: Recipe?)
+    suspend fun update(recipe: Recipe?)
 
     @Delete
-    fun delete(recipe: Recipe?)
+    suspend fun delete(recipe: Recipe?)
 }
 

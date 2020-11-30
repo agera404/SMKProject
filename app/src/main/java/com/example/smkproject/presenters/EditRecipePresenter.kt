@@ -21,8 +21,7 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
         }else{
             recipe = Recipe(title =  "",describe = "",dateTime = "",tags = "",ingredients = "")
         }
-        this.viewLifecycle = view.viewLifecycle?.lifecycle
-        viewLifecycle?.addObserver(this)
+
 
     }
 

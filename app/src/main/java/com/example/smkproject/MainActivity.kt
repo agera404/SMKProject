@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavController.OnDestinationChangedListener
 import androidx.navigation.fragment.NavHostFragment
@@ -23,9 +22,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,  MainView{
 
-     override var viewLifecycle: Lifecycle? = null
-
-    private var presenter: MainPresenter?= null
+    private lateinit var presenter: MainPresenter
 
     var navHostFragment: NavHostFragment? = null
     var navController: NavController? = null
@@ -33,9 +30,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        viewLifecycle = lifecycle
         MainRepository.context= this@MainActivity
+
         presenter = MainPresenter(this)
+        createMenu()
 
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment!!.navController
@@ -53,15 +51,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         openNavigationMenuButton.setOnClickListener(onClickListener)
         editRecipeMenuButton.setOnClickListener(onClickListener)
-        presenter!!.showRecipes(MainRepository.ID_TAG_ALLRECIPE)
+        presenter.showRecipes(MainRepository.ID_TAG_ALLRECIPE)
         nav_view.setNavigationItemSelectedListener(this)
-        /*do{
-
-            if (presenter!!.tags != null && presenter!!.tags?.count()!! > 0){
-                createMenu()
-                break
-            }
-        }while (presenter!!.tags == null || presenter!!.tags?.count() ==0)*/
 
 
     }
@@ -82,9 +73,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        for (t in presenter?.tags!!){
+        for (t in MainRepository.allTags!!){
             if (t.id?.toInt()!!  == item.itemId){
-                presenter?.showRecipes(t.id!!)
+                presenter.showRecipes(t.id)
                 navController?.popBackStack()
                 navController?.navigate(R.id.recipesFragment)
             }
@@ -109,11 +100,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun createMenu(){
-        if (presenter?.tags !=null && presenter?.tags!!.count()>0){
+        if (MainRepository.allTags?.count()!! >0){
+            Log.d("mLog", "createMenu()")
             var menu = nav_view.menu
             var subM0 = menu.addSubMenu(1,1,1,"Tags")
 
-            for (t in presenter?.tags!!){
+            for (t in MainRepository.allTags!!){
                 var title = "${t.tag} (${t.count})"
                 subM0.add(0, t.id!!.toInt(),0, title)
             }
@@ -124,7 +116,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun onMenuItemClick(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.allRecipeItemMenu -> {
-                presenter?.showRecipes(MainRepository.ID_TAG_ALLRECIPE)
+                presenter.showRecipes(MainRepository.ID_TAG_ALLRECIPE)
                 navController?.popBackStack()
                 navController?.navigate(R.id.recipesFragment)
                 drawerLayout.closeDrawer(GravityCompat.START)

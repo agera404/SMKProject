@@ -8,6 +8,7 @@ import androidx.room.Room
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.models.RecipeTag
 import com.example.smkproject.models.Tag
+import kotlinx.coroutines.runBlocking
 
 
 object MainRepository{
@@ -31,12 +32,18 @@ object MainRepository{
 
     var updateMenu: (()->Unit)? = null
 
+    var allRecipe: List<Recipe>? = null
+    var allTags: List<Tag>? = null
 
     private fun updateArrays() {
+        runBlocking {
+            loadRecipes()
+            loadTags()
+        }
         updateMenu?.invoke()
     }
 
-    fun deleteRecipe(idRecipe: Long){
+    suspend fun deleteRecipe(idRecipe: Long){
 
         val recipeDao = db?.recipeDao()
         val recipe = recipeDao?.getById(idRecipe)
@@ -44,7 +51,7 @@ object MainRepository{
         updateArrays()
     }
 
-    fun saveRecipe(recipe: Recipe) {
+    suspend fun saveRecipe(recipe: Recipe) {
         var idRecipe: Long? = db?.recipeDao()?.insert(recipe)
         var tags = recipe.convertTags()
         for (tag in tags){
@@ -57,29 +64,30 @@ object MainRepository{
 
     }
 
-    fun getRecipesByTag(idTag: Long): List<Recipe> {
+    suspend fun getRecipesByTag(): List<Recipe> {
+        if (currentIdTag == ID_TAG_ALLRECIPE) return allRecipe ?: arrayListOf<Recipe>()
 
         val recipeTagDao = db?.recipeTagDao()
-        return recipeTagDao?.getRecipesByTag(idTag = idTag) ?: arrayListOf<Recipe>()
+        return recipeTagDao?.getRecipesByTag(idTag = currentIdTag) ?: arrayListOf<Recipe>()
     }
 
-    fun loadRecipes(): LiveData<List<Recipe>>? {
+    suspend fun loadRecipes(): List<Recipe>? {
         val recipeDao = db?.recipeDao()
-        val recipes = recipeDao?.getAll()
-        return recipes
+        allRecipe = recipeDao?.getAll()
+        return allRecipe
 
     }
 
-    fun getAnyTag(): Tag?{
+    suspend fun getAnyTag(): Tag?{
         val tagDao = db?.tagDao()
         var tag = tagDao?.getAnyTag()
-        Log.d("mLog", "tag = ${tag?.tag}")
         return tag
     }
 
-    fun loadTags(): LiveData<List<Tag>>? {
+    suspend fun loadTags():List<Tag>? {
         val tagDao = db?.tagDao()
-        return tagDao?.getAll()
+        allTags = tagDao?.getAll()
+        return allTags
     }
 
 }

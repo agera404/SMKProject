@@ -11,7 +11,6 @@ class EditIngredientsPresenter(var view: EditIngredientsView) {
         if (MainRepository.selectedRecipe != null){
             //ingredients = MainRepository.selectedRecipe!!.ingredients
         }
-        Log.d("mLog", "EditIngredientsPresenter ingredients COUNT: ${ingredients.count()}")
     }
     fun setIngredients(){
         for (ingr in ingredients){
