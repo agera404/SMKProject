@@ -1,11 +1,10 @@
 package com.example.smkproject.models
 
-import androidx.room.ColumnInfo
-import androidx.room.Dao
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 
-@Entity(tableName = "ingredients")
+@Entity(tableName = "ingredients",
+    indices = [Index(value = ["title"],
+        unique = true)])
 class Ingredient(
     @PrimaryKey(autoGenerate = true) val id: Long?,
     @ColumnInfo(name = "title")val title: String,
@@ -15,5 +14,9 @@ class Ingredient(
 }
 @Dao
 interface IngredientDao{
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(tag: Ingredient?): Long
 
+    @Query("SELECT * FROM ingredients WHERE title = :ingredients")
+    suspend fun getByIngredients(ingredients: String): Ingredient?
 }

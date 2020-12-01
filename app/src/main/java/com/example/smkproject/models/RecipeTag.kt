@@ -12,8 +12,8 @@ import androidx.room.*
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("tag_id"),
         onDelete = ForeignKey.CASCADE,
-        onUpdate = ForeignKey.CASCADE)
-))
+        onUpdate = ForeignKey.CASCADE))
+        )
 class RecipeTag(
     @PrimaryKey(autoGenerate = true) val id: Long?,
     @ColumnInfo(name = "recipe_id", index = true)val recipe_id: Long,
@@ -26,5 +26,6 @@ interface RecipeTagDao{
     suspend fun getRecipesByTag(idTag: Long): List<Recipe>?
 
     @Insert
-    suspend fun insert(recipe: RecipeTag?)
+    suspend fun insert(recipeTag: RecipeTag)
+
 }

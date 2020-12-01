@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.room.Room
 import com.example.smkproject.models.Recipe
+import com.example.smkproject.models.RecipeIngredient
 import com.example.smkproject.models.RecipeTag
 import com.example.smkproject.models.Tag
 import kotlinx.coroutines.runBlocking
@@ -52,16 +53,8 @@ object MainRepository{
     }
 
     suspend fun saveRecipe(recipe: Recipe) {
-        var idRecipe: Long? = db?.recipeDao()?.insert(recipe)
-        var tags = recipe.convertTags()
-        for (tag in tags){
-            var idTag = db?.tagDao()?.insert(tag)
-            if (idTag != null && idRecipe!=null){
-                db?.recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = idRecipe, tag_id = idTag))
-            }
-        }
+        db?.recipeDao()?.insert(recipe)
         updateArrays()
-
     }
 
     suspend fun getRecipesByTag(): List<Recipe> {

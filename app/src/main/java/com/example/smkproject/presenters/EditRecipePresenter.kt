@@ -19,7 +19,7 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
         if (MainRepository.selectedRecipe != null) {
             recipe = MainRepository.selectedRecipe
         }else{
-            recipe = Recipe(title =  "",describe = "",dateTime = "",tags = "",ingredients = "")
+            recipe = Recipe(title =  "",describe = "",dateTime = "",tags = "", ingredients ="")
         }
 
 

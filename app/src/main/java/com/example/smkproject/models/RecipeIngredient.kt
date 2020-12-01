@@ -12,15 +12,18 @@ import androidx.room.*
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("ingredient_id"),
         onDelete = ForeignKey.CASCADE,
-        onUpdate = ForeignKey.CASCADE)
-))
+        onUpdate = ForeignKey.CASCADE)),
+        indices = [Index(value = ["recipe_id", "ingredient_id"],
+        unique = true)]
+)
 class RecipeIngredient(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) val id: Long?,
     @ColumnInfo(name = "recipe_id", index = true)val recipe_id: Long,
     @ColumnInfo(name = "ingredient_id", index = true) val ingredient_id: Long
 ) {
 }
 @Dao
 interface RecipeIngredientDao{
-
+    @Insert
+    suspend fun insert(recipe: RecipeIngredient?)
 }
