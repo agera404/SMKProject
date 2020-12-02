@@ -50,16 +50,16 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
             titleRecipeET.setText(presenter!!.recipe?.title)
             describRecipeET.setText(presenter!!.recipe?.describe)
             tagsET.setText(presenter!!.recipe?.tags)
-            //ingredientsTVInEdtitRecipe.setText(presenter!!.recipe?.stringIngredient)
-            //ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
+            ingredientsTVInEdtitRecipe.setText(presenter!!.recipe?.ingredients)
+            ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
         }
-        
     }
     val clickListener = View.OnClickListener {v ->
         when(v){
             addRecipeButton ->{
                 presenter?.saveRecipe()
                 MainRepository.selectedRecipe = null
+                MainRepository.updateMenu?.invoke()
                 findNavController().popBackStack(R.id.recipesFragment, false)
             }
             backButton ->{

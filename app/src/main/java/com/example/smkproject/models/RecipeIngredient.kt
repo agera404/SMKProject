@@ -23,7 +23,13 @@ class RecipeIngredient(
 ) {
 }
 @Dao
-interface RecipeIngredientDao{
+abstract class RecipeIngredientDao{
     @Insert
-    suspend fun insert(recipe: RecipeIngredient?)
+    abstract suspend fun insert(recipe: RecipeIngredient?)
+
+    @Delete
+    abstract suspend fun delete(ri: RecipeIngredient)
+
+    @Query("SELECT * FROM recipe_ingredient WHERE recipe_id = :idRecipe")
+    abstract suspend fun getByIdRecipe(idRecipe: Long?): List<RecipeIngredient>
 }

@@ -13,10 +13,30 @@ class Ingredient(
 
 }
 @Dao
-interface IngredientDao{
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(tag: Ingredient?): Long
+abstract class IngredientDao{
+    @Insert
+    abstract suspend fun insert(ingredient: Ingredient?): Long?
+
+    @Update
+    abstract suspend fun update(ingredient: Ingredient?)
+
+    @Delete
+    abstract suspend fun delete(ingredient: Ingredient?)
+
+
+    suspend fun insertOrUpdate(ingredient: Ingredient?): Long? {
+        var item = getByIngredient(ingredient?.title!!)
+        if (item != null){
+            return item.id
+        }else{
+            return insert(ingredient)
+        }
+    }
 
     @Query("SELECT * FROM ingredients WHERE title = :ingredients")
-    suspend fun getByIngredients(ingredients: String): Ingredient?
+    abstract suspend fun getByIngredient(ingredients: String): Ingredient?
+
+    @Query("SELECT * FROM ingredients WHERE id = :id")
+    abstract suspend fun getById(id: Long): Ingredient?
+
 }

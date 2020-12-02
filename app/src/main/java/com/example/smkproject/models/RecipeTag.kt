@@ -2,7 +2,8 @@ package com.example.smkproject.models
 
 import androidx.room.*
 
-@Entity(tableName = "recipe_tag",foreignKeys = arrayOf(
+@Entity(tableName = "recipe_tag",
+    foreignKeys = arrayOf(
     ForeignKey(entity = Recipe::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("recipe_id"),
@@ -21,11 +22,17 @@ class RecipeTag(
 ) {
 }
 @Dao
-interface RecipeTagDao{
+abstract class RecipeTagDao{
     @Query("SELECT * FROM recipe_tag LEFT JOIN recipes ON recipe_tag.recipe_id = recipes.id WHERE recipe_tag.tag_id = :idTag")
-    suspend fun getRecipesByTag(idTag: Long): List<Recipe>?
+    abstract suspend fun getRecipesByTag(idTag: Long): List<Recipe>?
+
+    @Query("SELECT * FROM recipe_tag WHERE recipe_id = :idRecipe")
+    abstract suspend fun getByIdRecipes(idRecipe: Long?): List<RecipeTag>
+
+    @Delete
+    abstract suspend fun delete(rt: RecipeTag)
 
     @Insert
-    suspend fun insert(recipeTag: RecipeTag)
+    abstract suspend fun insert(recipeTag: RecipeTag)
 
 }

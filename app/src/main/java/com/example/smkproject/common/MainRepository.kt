@@ -29,6 +29,7 @@ object MainRepository{
 
     var selectedRecipe: Recipe? = null
         set(value) {field = value}
+        get() = field
     var currentIdTag: Long = ID_TAG_ALLRECIPE // когда id < 0 показывает все рецепты
 
     var updateMenu: (()->Unit)? = null
@@ -41,14 +42,10 @@ object MainRepository{
             loadRecipes()
             loadTags()
         }
-        updateMenu?.invoke()
     }
 
     suspend fun deleteRecipe(idRecipe: Long){
-
-        val recipeDao = db?.recipeDao()
-        val recipe = recipeDao?.getById(idRecipe)
-        recipeDao?.delete(recipe)
+        db?.recipeDao()?.deleteRecipe(idRecipe)
         updateArrays()
     }
 

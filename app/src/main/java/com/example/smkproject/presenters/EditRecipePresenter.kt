@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
-    private var viewLifecycle: Lifecycle? = null
     var recipe: Recipe? = null
 
     init {
@@ -21,8 +20,6 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
         }else{
             recipe = Recipe(title =  "",describe = "",dateTime = "",tags = "", ingredients ="")
         }
-
-
     }
 
     fun isRecipeNotNull(): Boolean {
@@ -33,10 +30,8 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
     }
 
     fun saveRecipe() {
-        //recipe?.ingredients  = MainRepository.selectedRecipe?.ingredients!!
-       //recipe?.stringIngredient = MainRepository.selectedRecipe!!.stringIngredient
+        recipe?.ingredients = MainRepository.selectedRecipe?.ingredients!!
 
-        //if (recipe?.title?.length!! > 0 && recipe?.describe?.length!! > 0 && recipe?.tags?.length!! > 0 && recipe?.ingredients!!.count() > 0) {
             val currentDate = Date()
             val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
             val date = dateFormat.format(currentDate)
@@ -44,7 +39,6 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
                 MainRepository.saveRecipe(recipe!!)
             }
 
-        //}
     }
 
 }

@@ -11,7 +11,7 @@ class RecipePresenter(var view: RecipeView){
     }
     var recipe = MainRepository.selectedRecipe
     fun loadRecipe() {
-        view.setField(recipe!!.title, recipe!!.describe, "", recipe!!.tags)
+        view.setField(recipe!!.title, recipe!!.describe, recipe!!.ingredients, recipe!!.tags)
     }
 
 }
