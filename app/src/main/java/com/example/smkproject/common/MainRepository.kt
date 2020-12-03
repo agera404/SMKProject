@@ -54,8 +54,10 @@ object MainRepository{
         updateArrays()
     }
 
-    suspend fun getRecipesByTag(): List<Recipe> {
-        if (currentIdTag == ID_TAG_ALLRECIPE) return allRecipe ?: arrayListOf<Recipe>()
+    suspend fun getRecipesByTag(): List<Recipe>? {
+        if (currentIdTag == ID_TAG_ALLRECIPE) {
+            return loadRecipes()
+        }
 
         val recipeTagDao = db?.recipeTagDao()
         return recipeTagDao?.getRecipesByTag(idTag = currentIdTag) ?: arrayListOf<Recipe>()

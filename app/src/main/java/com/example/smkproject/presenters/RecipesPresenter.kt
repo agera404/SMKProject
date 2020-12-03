@@ -18,7 +18,6 @@ abstract class BasePresenter: CoroutineScope{
 class RecipesPresenter(var view: RecipesView): BasePresenter(){
     var recipes: List<Recipe>? = arrayListOf()
 
-
     fun selectRecipe(idRecipe: Long){
         for (recipe in recipes!!){
             if (recipe.id == idRecipe) MainRepository.selectedRecipe = recipe
@@ -38,6 +37,6 @@ class RecipesPresenter(var view: RecipesView): BasePresenter(){
         for (recipe in recipes!!){
             view.setRecipeOnLayout(recipe.id!!, recipe.title, recipe.describe, recipe.tags)
         }
-
+        MainRepository.currentIdTag = MainRepository.ID_TAG_ALLRECIPE
     }
 }

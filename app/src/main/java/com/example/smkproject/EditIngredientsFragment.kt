@@ -12,6 +12,8 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.smkproject.common.MainRepository
+import com.example.smkproject.databinding.FragmentEditIngredientsBinding
+import com.example.smkproject.databinding.FragmentEditRecipeBinding
 import com.example.smkproject.models.Ingredient
 import com.example.smkproject.presenters.EditIngredientsPresenter
 import com.example.smkproject.views.EditIngredientsView
@@ -21,13 +23,24 @@ import kotlinx.android.synthetic.main.fragment_edit_ingredients.*
 class EditIngredientsFragment : Fragment(), EditIngredientsView {
 
     var presenter: EditIngredientsPresenter? = null
+
+    private var _binding: FragmentEditIngredientsBinding? = null
+    private val binding get() = _binding!!
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_edit_ingredients, container, false)
+        _binding = FragmentEditIngredientsBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     var ingredientET: EditText? = null //ингредиент
     var amountET: EditText? = null //кол-во ингредиента
@@ -39,15 +52,17 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
         super.onActivityCreated(savedInstanceState)
         presenter = EditIngredientsPresenter(this)
 
-        ingredientET = (listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexTitle) as EditText
+
+
+        ingredientET = (binding.listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexTitle) as EditText
         ingredientET?.addTextChangedListener(textWatcher)
 
-        amountET = (listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexAmount) as EditText
+        amountET = (binding.listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexAmount) as EditText
         amountET?.addTextChangedListener(textWatcher)
 
-        unitSpinner = (listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexSpinner) as Spinner
+        unitSpinner = (binding.listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexSpinner) as Spinner
 
-        delIngrButton = (listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexButt) as Button
+        delIngrButton = (binding.listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexButt) as Button
         delIngrButton?.setOnClickListener(this.clickListener)
 
         addNewIngredientButton.setOnClickListener(clickListener)
@@ -63,10 +78,10 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
             delIngrButton->{
 
             }
-            addNewIngredientButton->{
+            binding.addNewIngredientButton->{
                 newIngredientView()
             }
-            saveIngredientsButton->{
+            binding.saveIngredientsButton->{
                 presenter?.ingredients = arrayListOf()
                 for (element in listIngredients.children){
                     saveIngredient(element)

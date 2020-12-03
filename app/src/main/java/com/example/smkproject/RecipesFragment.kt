@@ -12,6 +12,8 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.smkproject.common.MainRepository
+import com.example.smkproject.databinding.FragmentRecipesBinding
+import com.example.smkproject.databinding.RecipeContainerBinding
 import com.example.smkproject.presenters.RecipesPresenter
 import com.example.smkproject.views.RecipesView
 import kotlinx.android.synthetic.main.fragment_recipes.*
@@ -21,6 +23,10 @@ class RecipesFragment : Fragment(), RecipesView {
 
 
     private var presenter: RecipesPresenter? = null
+
+    private var _binding: FragmentRecipesBinding? = null
+    private val binding get() = _binding!!
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         presenter = RecipesPresenter(this)
@@ -31,11 +37,15 @@ class RecipesFragment : Fragment(), RecipesView {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        MainRepository.updateMenu?.invoke()
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipes, container, false)
+        _binding = FragmentRecipesBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 
     var clickListener = View.OnClickListener{v ->
@@ -75,6 +85,5 @@ class RecipesFragment : Fragment(), RecipesView {
         view.setOnClickListener(clickListener)
         view.setOnLongClickListener(longClickListener)
         recipesLayout.addView(view)
-
     }
 }

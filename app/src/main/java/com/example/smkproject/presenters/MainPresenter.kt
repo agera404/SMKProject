@@ -18,9 +18,13 @@ class MainPresenter (var view: MainView): BasePresenter() {
         MainRepository.updateMenu = { view.updateMenu() }
 
     }
-
-    fun showRecipes(idTag: Long){
-        MainRepository.currentIdTag = idTag
+    fun getTags(): List<Tag>{
+        var tags: List<Tag> = arrayListOf()
+        runBlocking {
+            tags = MainRepository.loadTags()!!
+        }
+        return tags
     }
+
 
 }
