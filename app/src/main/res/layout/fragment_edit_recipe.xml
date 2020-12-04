@@ -65,11 +65,13 @@
                 android:layout_weight="1"/>
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/tagsET"
+        <MultiAutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/acTV"
+            android:completionThreshold="1"
             android:hint="Tags"/>
+
 
 
 

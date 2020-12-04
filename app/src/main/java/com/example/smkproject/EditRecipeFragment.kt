@@ -6,25 +6,21 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Spinner
-import androidx.core.view.children
-import androidx.lifecycle.LifecycleOwner
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.MultiAutoCompleteTextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.findNavController
-import com.example.smkproject.R.id.titleRecipeET
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.databinding.FragmentEditRecipeBinding
-import com.example.smkproject.databinding.FragmentRecipesBinding
 import com.example.smkproject.presenters.EditRecipePresenter
 import com.example.smkproject.views.EditRecipeView
 import kotlinx.android.synthetic.main.fragment_edit_recipe.*
-import java.lang.Exception
 
 
 class EditRecipeFragment : Fragment(), EditRecipeView{
@@ -56,12 +52,39 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
         binding.addIngredientsButton.setOnClickListener(clickListener)
         binding.titleRecipeET.addTextChangedListener(textWatcher)
         binding.describRecipeET.addTextChangedListener(textWatcher)
-        binding.tagsET.addTextChangedListener(textWatcher)
+        binding.acTV.addTextChangedListener(textWatcher)
+
+       /*------------------разобрать--------------*/
+        /*val listTags = arrayListOf<String>()
+        var temp = MainRepository.allTags?.sortedBy { it.count }!!
+
+        Log.d("mLog", "${temp.count()}")
+        if (temp.count()>0){
+            var i: Int = 0
+            for (item in temp){
+                listTags.add(item.tag)
+                i++
+                if (i== 2) break
+            }
+        }*/
+
+        var adapter: ArrayAdapter<String>? = context?.let { ArrayAdapter<String>(it, android.R.layout.simple_spinner_item, listTags) }
+
+        binding.acTV.setAdapter(adapter)
+
+        binding.acTV.setTokenizer(MultiAutoCompleteTextView.CommaTokenizer())
+        binding.acTV.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(v: View?) {
+                binding.acTV.showDropDown()
+            }
+        })
+
+        /*------------------разобрать--------------*/
 
         if(presenter!!.isRecipeNotNull()){
             binding.titleRecipeET.setText(presenter!!.recipe?.title)
             binding.describRecipeET.setText(presenter!!.recipe?.describe)
-            binding.tagsET.setText(presenter!!.recipe?.tags)
+            binding.acTV.setText(presenter!!.recipe?.tags)
             binding.ingredientsTVInEdtitRecipe.setText(presenter!!.recipe?.ingredients)
             binding.ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
         }
@@ -86,15 +109,15 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
     }
     private var textWatcher = object : TextWatcher{
         override fun afterTextChanged(s: Editable?) {
-            if(titleRecipeET.getText().hashCode() == s.hashCode()){
-                presenter?.recipe?.title  = titleRecipeET.text.toString()
+            if(binding.titleRecipeET.getText().hashCode() == s.hashCode()){
+                presenter?.recipe?.title  = binding.titleRecipeET.text.toString()
             }
-            if(describRecipeET.getText().hashCode() == s.hashCode()){
+            if(binding.describRecipeET.getText().hashCode() == s.hashCode()){
 
                 presenter?.recipe?.describe = describRecipeET.text.toString()
             }
-            if(tagsET.getText().hashCode() == s.hashCode()){
-                presenter?.recipe?.tags = tagsET.text.toString()
+            if(binding.acTV.getText().hashCode() == s.hashCode()){
+                presenter?.recipe?.tags = binding.acTV.text.toString()
             }
 
         }
