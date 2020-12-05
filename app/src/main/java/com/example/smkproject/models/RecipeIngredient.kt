@@ -6,13 +6,13 @@ import androidx.room.*
     ForeignKey(entity = Recipe::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("recipe_id"),
-        onDelete = ForeignKey.CASCADE,
-        onUpdate = ForeignKey.CASCADE),
+        onDelete = ForeignKey.CASCADE
+        ),
     ForeignKey(entity = Tag::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("ingredient_id"),
-        onDelete = ForeignKey.CASCADE,
-        onUpdate = ForeignKey.CASCADE)),
+        onDelete = ForeignKey.CASCADE
+        )),
         indices = [Index(value = ["recipe_id", "ingredient_id"],
         unique = true)]
 )

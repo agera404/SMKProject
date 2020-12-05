@@ -68,7 +68,7 @@
         <MultiAutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/acTV"
+            android:id="@+id/editTags"
             android:completionThreshold="1"
             android:hint="Tags"/>
 

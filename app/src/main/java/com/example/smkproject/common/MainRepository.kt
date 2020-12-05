@@ -76,7 +76,7 @@ object MainRepository{
         return tag
     }
 
-    suspend fun loadTags():List<Tag>? {
+    suspend fun loadTags(): List<Tag>? {
         val tagDao = db?.tagDao()
         allTags = tagDao?.getAll()
         return allTags

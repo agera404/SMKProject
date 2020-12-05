@@ -22,7 +22,8 @@ class Recipe(
         var tagsStr = tags.split(",").toTypedArray()
         for (t in tagsStr){
             var _tag = t.trim(' ')
-            tagsList.add(Tag(id = null, tag = _tag))
+            if (_tag.isNotEmpty() && _tag.isNotEmpty())
+                tagsList.add(Tag(id = null, tag = _tag))
         }
         return tagsList
     }

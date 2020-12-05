@@ -7,7 +7,7 @@ import androidx.room.*
 @Entity(tableName = "tags")
 class Tag(
     @PrimaryKey(autoGenerate = true) val id: Long?,
-    @ColumnInfo(name = "tag") val tag: String,
+    @ColumnInfo(name = "tag") var tag: String,
     @ColumnInfo(name = "count") var count: Int = 0) {
 
 }
@@ -34,7 +34,7 @@ abstract class TagDao{
     @Query("UPDATE tags SET count = count - 1  WHERE id = :idTag")
     abstract suspend fun reduceCount(idTag: Long)
 
-    //suspend fun reduceCount(idTag: String)
+
     suspend fun insertOrUpdate(tag: Tag?): Long? {
         var item = getByTag(tag?.tag!!)
         if (item != null){

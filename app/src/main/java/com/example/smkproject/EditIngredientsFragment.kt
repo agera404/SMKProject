@@ -76,7 +76,7 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
     var clickListener = View.OnClickListener { v ->
         when(v){
             delIngrButton->{
-
+                (delIngrButton?.parent as ViewGroup).removeView(delIngrButton?.parent as ViewGroup)
             }
             binding.addNewIngredientButton->{
                 newIngredientView()

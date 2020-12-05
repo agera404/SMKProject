@@ -18,7 +18,9 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.findNavController
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.databinding.FragmentEditRecipeBinding
+import com.example.smkproject.models.Recipe
 import com.example.smkproject.presenters.EditRecipePresenter
+import com.example.smkproject.presenters.ErrorSaveCode
 import com.example.smkproject.views.EditRecipeView
 import kotlinx.android.synthetic.main.fragment_edit_recipe.*
 
@@ -50,60 +52,62 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
         binding.addRecipeButton.setOnClickListener(clickListener)
         binding.backButton.setOnClickListener(clickListener)
         binding.addIngredientsButton.setOnClickListener(clickListener)
+        binding.editTags.setOnClickListener(clickListener)
         binding.titleRecipeET.addTextChangedListener(textWatcher)
         binding.describRecipeET.addTextChangedListener(textWatcher)
-        binding.acTV.addTextChangedListener(textWatcher)
+        binding.editTags.addTextChangedListener(textWatcher)
 
-       /*------------------разобрать--------------*/
-        /*val listTags = arrayListOf<String>()
-        var temp = MainRepository.allTags?.sortedBy { it.count }!!
-
-        Log.d("mLog", "${temp.count()}")
-        if (temp.count()>0){
-            var i: Int = 0
-            for (item in temp){
-                listTags.add(item.tag)
-                i++
-                if (i== 2) break
-            }
-        }*/
-
-        var adapter: ArrayAdapter<String>? = context?.let { ArrayAdapter<String>(it, android.R.layout.simple_spinner_item, listTags) }
-
-        binding.acTV.setAdapter(adapter)
-
-        binding.acTV.setTokenizer(MultiAutoCompleteTextView.CommaTokenizer())
-        binding.acTV.setOnClickListener(object : View.OnClickListener{
-            override fun onClick(v: View?) {
-                binding.acTV.showDropDown()
-            }
-        })
-
-        /*------------------разобрать--------------*/
+        var adapter: ArrayAdapter<String>? = context?.let { ArrayAdapter<String>(it, android.R.layout.simple_spinner_item, presenter!!.getTags()) }
+        binding.editTags.setAdapter(adapter)
+        binding.editTags.setTokenizer(MultiAutoCompleteTextView.CommaTokenizer())
 
         if(presenter!!.isRecipeNotNull()){
             binding.titleRecipeET.setText(presenter!!.recipe?.title)
             binding.describRecipeET.setText(presenter!!.recipe?.describe)
-            binding.acTV.setText(presenter!!.recipe?.tags)
+            binding.editTags.setText(presenter!!.recipe?.tags)
             binding.ingredientsTVInEdtitRecipe.setText(presenter!!.recipe?.ingredients)
             binding.ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
         }
     }
     val clickListener = View.OnClickListener {v ->
         when(v){
-            addRecipeButton ->{
-                presenter?.saveRecipe()
-                MainRepository.selectedRecipe = null
-                findNavController().popBackStack(R.id.recipesFragment, false)
-                MainRepository.updateMenu?.invoke()
+            binding.addRecipeButton ->{
+                val errorCode = presenter?.saveRecipe()
+                if ( errorCode == null){
+                    MainRepository.selectedRecipe = null
+                    findNavController().popBackStack(R.id.recipesFragment, false)
+                    MainRepository.updateMenu?.invoke()
+                }else{
+                    var text: String = ""
+                    when(errorCode){
+                        ErrorSaveCode.ERROR_TITLE ->{
+                            text = "Set title"
+                        }
+                        ErrorSaveCode.ERROR_DESCRIBE ->{
+                            text = "Set describe"
+                        }
+                        ErrorSaveCode.ERROR_INGR ->{
+                            text = "Set ingr"
+                        }
+                        ErrorSaveCode.ERROR_TAGS ->{
+                            text = "Set tags"
+                        }
+                    }
+                    Toast.makeText(context,"ERROR: $text",Toast.LENGTH_LONG)
+                }
+
+
             }
-            backButton ->{
+            binding.backButton ->{
                 findNavController().popBackStack(R.id.recipesFragment, false)
                 MainRepository.selectedRecipe = null
             }
-            addIngredientsButton ->{
+            binding.addIngredientsButton ->{
                 MainRepository.selectedRecipe = presenter?.recipe
                 findNavController().navigate(R.id.editIngredientsFragment)
+            }
+            binding.editTags ->{
+                binding.editTags.showDropDown()
             }
         }
     }
@@ -116,8 +120,10 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
 
                 presenter?.recipe?.describe = describRecipeET.text.toString()
             }
-            if(binding.acTV.getText().hashCode() == s.hashCode()){
-                presenter?.recipe?.tags = binding.acTV.text.toString()
+            if(binding.editTags.getText().hashCode() == s.hashCode()){
+                var tags = binding.editTags.text.toString()
+                //drop last ','
+                presenter?.recipe?.tags = tags
             }
 
         }

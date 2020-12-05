@@ -42,8 +42,6 @@ class RecipeFragment : Fragment(), RecipeView {
         super.onActivityCreated(savedInstanceState)
         presenter = RecipePresenter(this)
         presenter!!.loadRecipe()
-
-
     }
 
     override fun setField(title: String, describ: String, ingredient: String, tags: String){
