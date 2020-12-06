@@ -14,7 +14,7 @@ class Ingredient(
 }
 @Dao
 abstract class IngredientDao{
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insert(ingredient: Ingredient?): Long?
 
     @Update

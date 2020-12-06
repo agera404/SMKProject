@@ -24,7 +24,7 @@ class RecipeIngredient(
 }
 @Dao
 abstract class RecipeIngredientDao{
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insert(recipe: RecipeIngredient?)
 
     @Delete

@@ -12,7 +12,7 @@ class Recipe(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "title") var title: String,
     @ColumnInfo(name = "describe") var describe: String,
-    @ColumnInfo(name = "dateTime") val dateTime: String,
+    @ColumnInfo(name = "dateTime") var dateTime: String,
     @ColumnInfo(name = "tags") var tags: String,
     @ColumnInfo(name = "ingredients") var ingredients: String
 ){
@@ -63,6 +63,18 @@ abstract class RecipeDao{
     abstract suspend fun insertRecipe(recipe: Recipe?): Long
 
     suspend fun insert(recipe: Recipe?){
+
+        while(recipe?.tags?.get(recipe?.tags?.length-1) == ' ' || recipe?.tags?.get(recipe?.tags?.length-1) == ',' ) {
+            Log.d("mLog", "OLD " + recipe?.tags)
+            if (recipe?.tags?.get(recipe?.tags?.length-1) == ' ') {
+                recipe?.tags = recipe?.tags?.dropLast(1)
+            }
+            if (recipe?.tags?.get(recipe?.tags?.length-1) == ',') {
+                recipe?.tags = recipe?.tags?.dropLast(1)
+            }
+            Log.d("mLog","NEW " + recipe?.tags)
+        }
+
         val idRecipe: Long? = MainRepository.db?.recipeDao()?.insertRecipe(recipe)
         val tags = recipe?.convertTags()
         if (tags != null) {

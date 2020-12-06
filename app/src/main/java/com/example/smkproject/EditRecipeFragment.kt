@@ -93,10 +93,8 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
                             text = "Set tags"
                         }
                     }
-                    Toast.makeText(context,"ERROR: $text",Toast.LENGTH_LONG)
+                    Toast.makeText(context,"ERROR: $text",Toast.LENGTH_LONG).show()
                 }
-
-
             }
             binding.backButton ->{
                 findNavController().popBackStack(R.id.recipesFragment, false)

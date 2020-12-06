@@ -33,7 +33,6 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
         return false
     }
     private var errorCode: String?=null
-    //допиши тут. НЕ работат же
     fun isSaveError(): Boolean{
         recipe?.let {
             if (it.title.isEmpty() || it.title.isBlank()){
@@ -52,7 +51,6 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
                 errorCode = ErrorSaveCode.ERROR_TAGS
                 return true
             }
-
         }
         return false
     }
@@ -61,6 +59,7 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
         val currentDate = Date()
         val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
         val date = dateFormat.format(currentDate)
+        recipe?.dateTime = date
 
         if (!isSaveError()){
             launch {

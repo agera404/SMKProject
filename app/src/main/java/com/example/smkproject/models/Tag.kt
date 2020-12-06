@@ -45,7 +45,7 @@ abstract class TagDao{
         }
     }
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insert(tag: Tag?): Long
 
     @Update
