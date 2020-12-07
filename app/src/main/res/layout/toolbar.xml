@@ -28,7 +28,7 @@
                 android:background="@drawable/ic_edit"
                 android:layout_gravity="end"
                 android:visibility="invisible"
-                />
+                />  
 
 
         </androidx.appcompat.widget.Toolbar>

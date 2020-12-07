@@ -6,15 +6,15 @@ import androidx.room.*
     ForeignKey(entity = Recipe::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("recipe_id"),
-        onDelete = ForeignKey.CASCADE
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE
         ),
-    ForeignKey(entity = Tag::class,
+    ForeignKey(entity = Ingredient::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("ingredient_id"),
-        onDelete = ForeignKey.CASCADE
-        )),
-        indices = [Index(value = ["recipe_id", "ingredient_id"],
-        unique = true)]
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE
+        ))
 )
 class RecipeIngredient(
     @PrimaryKey(autoGenerate = true) val id: Long?,
@@ -25,11 +25,15 @@ class RecipeIngredient(
 @Dao
 abstract class RecipeIngredientDao{
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun insert(recipe: RecipeIngredient?)
+    abstract suspend fun insert(ri: RecipeIngredient?)
 
     @Delete
     abstract suspend fun delete(ri: RecipeIngredient)
 
     @Query("SELECT * FROM recipe_ingredient WHERE recipe_id = :idRecipe")
     abstract suspend fun getByIdRecipe(idRecipe: Long?): List<RecipeIngredient>
+
+    @Query("SELECT * FROM recipe_ingredient WHERE recipe_id = :idIngredient")
+    abstract suspend fun getByIdIngredient(idIngredient: Long?): List<RecipeIngredient>
+
 }

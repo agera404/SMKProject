@@ -6,9 +6,12 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.ImageButton
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavController.OnDestinationChangedListener
 import androidx.navigation.fragment.NavHostFragment
@@ -107,9 +110,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun createMenu(){
         var tags = presenter.getTags()
+        var menu = nav_view.menu
         if (tags.count()!! >0){
             Log.d("mLog", "createMenu()")
-            var menu = nav_view.menu
+
             var subM0 = menu.addSubMenu(1,1,1,"Tags")
 
             for (t in tags){
@@ -117,7 +121,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 subM0.add(0, t.id!!.toInt(),0, title)
             }
         }
+        //var adapter: ArrayAdapter<String> = ArrayAdapter() адаптер для поиска
+        var searchItem: MenuItem = menu.findItem(R.id.search)//binding.navView.
+        var searchView: SearchView = MenuItemCompat.getActionView(searchItem) as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
+            override fun onQueryTextChange(newText: String): Boolean {
+                //на каждый символ
+                return true
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                //кнопка нажата
+                return false
+            }
+
+        })
     }
 
     fun onMenuItemClick(item: MenuItem?): Boolean {

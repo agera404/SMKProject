@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.example.smkproject.common.MainRepository
+import java.lang.Exception
 
 
 @Entity(tableName = "recipes")
@@ -64,15 +65,14 @@ abstract class RecipeDao{
 
     suspend fun insert(recipe: Recipe?){
 
-        while(recipe?.tags?.get(recipe?.tags?.length-1) == ' ' || recipe?.tags?.get(recipe?.tags?.length-1) == ',' ) {
-            Log.d("mLog", "OLD " + recipe?.tags)
-            if (recipe?.tags?.get(recipe?.tags?.length-1) == ' ') {
+        //перенести в Recipe
+        while(recipe?.tags?.get(recipe.tags.length -1) == ' ' || recipe?.tags?.get(recipe.tags.length -1) == ',' ) {
+            if (recipe?.tags.get(recipe?.tags?.length-1) == ' ') {
                 recipe?.tags = recipe?.tags?.dropLast(1)
             }
             if (recipe?.tags?.get(recipe?.tags?.length-1) == ',') {
                 recipe?.tags = recipe?.tags?.dropLast(1)
             }
-            Log.d("mLog","NEW " + recipe?.tags)
         }
 
         val idRecipe: Long? = MainRepository.db?.recipeDao()?.insertRecipe(recipe)
@@ -82,10 +82,11 @@ abstract class RecipeDao{
                 val idTag = MainRepository.db?.tagDao()?.insertOrUpdate(tag)
                 if (idTag != null) {
                     MainRepository.db?.tagDao()?.increaseCount(idTag = idTag)
+                    if(idRecipe != null){
+                            MainRepository.db?.recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = idRecipe, tag_id = idTag))
+                    }
                 }
-                if (idTag != null && idRecipe!=null){
-                    MainRepository.db?.recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = idRecipe, tag_id = idTag))
-                }
+
             }
         }
         var ingredients = recipe?.convertIngredients()

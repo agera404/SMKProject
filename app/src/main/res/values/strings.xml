@@ -11,6 +11,7 @@
     <string name="save_ingredients">Сохранить ингредиенты</string>
     <string name="error_fild_is_empty">Заполните все поля</string>
     <string name="delete_recipe">Удалить</string>
+    <string name="hint_search">Поиск</string>
 
 
     <string-array name="unit">
