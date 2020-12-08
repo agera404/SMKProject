@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recipeCV"
+    >
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxHeight="180dp"
-        android:padding="10dp"
-        android:layout_margin="10dp"
-        android:orientation="vertical"
-        android:background="#f2f2f2">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <TextView
+            android:id="@+id/titleTVRC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24dp"
@@ -17,6 +19,7 @@
             android:ellipsize="end"/>
 
         <TextView
+            android:id="@+id/describTVRC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
@@ -25,8 +28,16 @@
             android:ellipsize="end"/>
 
         <TextView
+            android:id="@+id/tagsTVRC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lines="1"/>
-</LinearLayout>
+    </LinearLayout>
+
+
+
+</androidx.cardview.widget.CardView>
+
+
+
 

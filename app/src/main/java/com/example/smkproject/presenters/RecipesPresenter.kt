@@ -30,12 +30,9 @@ class RecipesPresenter(var view: RecipesView): BasePresenter(){
         }
     }
 
-    fun showRecipes(){
+    fun loadRecipes(){
         runBlocking {
             recipes = MainRepository.getRecipesByTag()
-        }
-        for (recipe in recipes!!){
-            view.setRecipeOnLayout(recipe.id!!, recipe.title, recipe.describe, recipe.tags)
         }
         MainRepository.currentIdTag = MainRepository.ID_TAG_ALLRECIPE
     }

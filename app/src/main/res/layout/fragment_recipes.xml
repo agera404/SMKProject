@@ -11,19 +11,17 @@
         android:layout_height="match_parent"
         android:id="@+id/rootLayout"
         android:orientation="vertical">
-        <androidx.core.widget.NestedScrollView
+        <!--<androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
-            <LinearLayout
+            >-->
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/recipesLayout"
-                android:orientation="vertical"
-                android:padding="10dp">
-            </LinearLayout>
+                android:padding="10dp"/>
 
-        </androidx.core.widget.NestedScrollView>
+        <!--</androidx.core.widget.NestedScrollView>-->
     </LinearLayout>
 
 
