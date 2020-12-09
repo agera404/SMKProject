@@ -18,6 +18,7 @@ abstract class BasePresenter: CoroutineScope{
 class RecipesPresenter(var view: RecipesView): BasePresenter(){
     var recipes: List<Recipe>? = arrayListOf()
 
+
     fun selectRecipe(idRecipe: Long){
         for (recipe in recipes!!){
             if (recipe.id == idRecipe) MainRepository.selectedRecipe = recipe

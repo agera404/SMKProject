@@ -34,6 +34,8 @@ object MainRepository{
 
     var updateMenu: (()->Unit)? = null
 
+    var getFilter: ((String) -> Unit)? = null
+
     var allRecipe: List<Recipe>? = null
     var allTags: List<Tag>? = null
 

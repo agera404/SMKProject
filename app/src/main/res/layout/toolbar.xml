@@ -3,16 +3,21 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="60dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity"
+    >
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             style="@style/Toolbar"
+            app:menu = "@menu/activity_main_toolbar"
+            android:id="@+id/toolbar"
             >
             <ImageButton
                 android:layout_width="40dp"
@@ -21,6 +26,8 @@
                 android:id="@+id/openNavigationMenuButton"
                 android:layout_gravity="start"
                 />
+
+
             <ImageButton
                 android:id="@+id/editRecipeMenuButton"
                 android:layout_width="50dp"

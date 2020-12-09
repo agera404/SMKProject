@@ -3,6 +3,7 @@ package com.example.smkproject
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,7 @@ class RecipesFragment : Fragment(), RecipesView {
 
         val llm = LinearLayoutManager(context);
         binding.recipesLayout.layoutManager = llm
-        adapter = presenter!!.recipes?.let { RecipesAdapter(it) }
+        adapter = RecipesAdapter(listRecipes = presenter!!.recipes!! as ArrayList<Recipe>, shortClickListener = { item: Recipe -> clickListener(item)}, longClickListener = { pos:Int, item: Recipe -> longClickListener(pos,item)})
         binding.recipesLayout.adapter = adapter
 
     }
@@ -52,22 +53,17 @@ class RecipesFragment : Fragment(), RecipesView {
     }
 
 
-    var clickListener = View.OnClickListener{v ->
-        var tag = v.tag.toString()
-        var idRecipe = tag.toLong()
-        presenter?.selectRecipe(idRecipe)
-        findNavController().navigate(R.id.recipeFragment)
+    var clickListener = {recipe: Recipe ->
+            presenter?.selectRecipe(recipe.id!!)
+            findNavController().navigate(R.id.recipeFragment)
     }
-    var longClickListener =  View.OnLongClickListener { v ->
-        val items =
-            arrayOf<CharSequence>(getString(R.string.delete_recipe))
-
+    var longClickListener =  {pos: Int, recipe: Recipe ->
+        val items = arrayOf<CharSequence>(getString(R.string.delete_recipe))
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
         builder.setItems(items,
             DialogInterface.OnClickListener { dialog, item ->
-                var idRecipe  = v.tag.toString().toLong()
-                (v?.parent as ViewGroup).removeView(v)
-                presenter?.deleteRecipe(idRecipe)
+                presenter?.deleteRecipe(recipe.id!!)
+                adapter?.remove(pos)
             })
         builder.show()
         true

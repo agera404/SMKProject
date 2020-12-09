@@ -4,13 +4,19 @@ package com.example.smkproject
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smkproject.common.MainRepository
 import com.example.smkproject.models.Recipe
 
 
-class RecipesAdapter(listRecipes: List<Recipe>): RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
+class RecipesAdapter(listRecipes: ArrayList<Recipe>,
+                     private val shortClickListener: (Recipe) -> Unit,
+                     private val longClickListener: (pos: Int, Recipe) -> Boolean): RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>(),
+    Filterable {
     class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var cv: CardView? = null
         var titleRecipe: TextView? = null
@@ -26,9 +32,15 @@ class RecipesAdapter(listRecipes: List<Recipe>): RecyclerView.Adapter<RecipesAda
         }
     }
 
-    var listRecipes: List<Recipe> = arrayListOf()
+
+    var recipes: ArrayList<Recipe> = arrayListOf()
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
     init {
-        this.listRecipes = listRecipes
+        this.recipes = listRecipes
+        MainRepository.getFilter = {text: String -> getFilter().filter(text)}
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         val v: View =
@@ -37,17 +49,54 @@ class RecipesAdapter(listRecipes: List<Recipe>): RecyclerView.Adapter<RecipesAda
     }
 
     override fun getItemCount(): Int {
-        return listRecipes.size
+        return recipes.size
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
+        val item = recipes.get(position)
+        holder.titleRecipe?.setText(item.title)
+        holder.describeRecipe?.setText(item.describe)
+        holder.tagsRecipe?.setText(item.tags)
+        holder.itemView.setOnClickListener { shortClickListener(item) }
+        holder.itemView.setOnLongClickListener(View.OnLongClickListener {
+            longClickListener(position, item)
+        })
 
-        holder.titleRecipe?.setText(listRecipes.get(position).title)
-        holder.describeRecipe?.setText(listRecipes.get(position).describe)
-        holder.tagsRecipe?.setText(listRecipes.get(position).tags)
     }
+    fun remove(position: Int) {
+        // Remove and notify the adapter to reload
+        recipes.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter(){
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+
+                val queryString = constraint?.toString()?.toLowerCase()
+                val filterResults = Filter.FilterResults()
+
+                if (queryString==null || queryString.isEmpty()){
+                    filterResults.values = recipes
+                } else{
+                    filterResults.values = recipes.filter {
+                        it.title.toLowerCase().contains(queryString) ||
+                                it.describe.toLowerCase().contains(queryString) ||
+                                it.ingredients.toLowerCase().contains(queryString) ||
+                                it.tags.toLowerCase().contains(queryString) ||
+                                it.dateTime.toLowerCase().contains(queryString) }
+                }
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                recipes = results?.values as ArrayList<Recipe>
+            }
+        }
     }
 }
