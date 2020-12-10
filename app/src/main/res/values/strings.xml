@@ -12,6 +12,7 @@
     <string name="error_fild_is_empty">Заполните все поля</string>
     <string name="delete_recipe">Удалить</string>
     <string name="hint_search">Поиск</string>
+    <string name="search_result_for_query">"Результат поиска по запросу "</string>
 
 
     <string-array name="unit">

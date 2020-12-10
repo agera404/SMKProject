@@ -1,6 +1,7 @@
 package com.example.smkproject
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,12 +35,18 @@ class RecipesAdapter(listRecipes: ArrayList<Recipe>,
 
 
     var recipes: ArrayList<Recipe> = arrayListOf()
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
+        set(value) {
+            field = value
+            filtredRecipes.clear()
+            filtredRecipes.addAll(field)
+            notifyDataSetChanged()
+        }
+    var filtredRecipes: ArrayList<Recipe> = arrayListOf()
+
+
     init {
         this.recipes = listRecipes
+        Log.d("mLog","filtredRecipes ${filtredRecipes.size}")
         MainRepository.getFilter = {text: String -> getFilter().filter(text)}
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
@@ -49,11 +56,11 @@ class RecipesAdapter(listRecipes: ArrayList<Recipe>,
     }
 
     override fun getItemCount(): Int {
-        return recipes.size
+        return filtredRecipes.size
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        val item = recipes.get(position)
+        val item = filtredRecipes.get(position)
         holder.titleRecipe?.setText(item.title)
         holder.describeRecipe?.setText(item.describe)
         holder.tagsRecipe?.setText(item.tags)
@@ -64,8 +71,7 @@ class RecipesAdapter(listRecipes: ArrayList<Recipe>,
 
     }
     fun remove(position: Int) {
-        // Remove and notify the adapter to reload
-        recipes.removeAt(position)
+        filtredRecipes.removeAt(position)
         notifyItemRemoved(position)
     }
 
@@ -81,6 +87,8 @@ class RecipesAdapter(listRecipes: ArrayList<Recipe>,
                 val queryString = constraint?.toString()?.toLowerCase()
                 val filterResults = Filter.FilterResults()
 
+
+
                 if (queryString==null || queryString.isEmpty()){
                     filterResults.values = recipes
                 } else{
@@ -95,7 +103,9 @@ class RecipesAdapter(listRecipes: ArrayList<Recipe>,
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                recipes = results?.values as ArrayList<Recipe>
+                filtredRecipes.clear()
+                filtredRecipes.addAll(results?.values as ArrayList<Recipe>)
+                notifyDataSetChanged();
             }
         }
     }

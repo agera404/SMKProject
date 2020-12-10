@@ -8,11 +8,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuItemCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavController.OnDestinationChangedListener
 import androidx.navigation.fragment.NavHostFragment
@@ -64,6 +62,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toolbarBinding = binding.incToolbar
         toolbarBinding.openNavigationMenuButton.setOnClickListener(onClickListener)
         toolbarBinding.editRecipeMenuButton.setOnClickListener(onClickListener)
+        binding.resetFilterButton.setOnClickListener(onClickListener)
         MainRepository.currentIdTag = MainRepository.ID_TAG_ALLRECIPE
         binding.navView.setNavigationItemSelectedListener(this)
 
@@ -79,6 +78,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             toolbarBinding.editRecipeMenuButton ->{
                 navController?.navigate(R.id.editRecipeFragment)
+            }
+            binding.resetFilterButton ->{
+                binding.searchResultFor.text = String()
+                binding.searchInform.visibility = View.GONE
+                navController?.popBackStack()
+                navController?.navigate(R.id.recipesFragment)
             }
         }
     }
@@ -99,12 +104,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
-
         val myActionMenuItem = menu!!.findItem(R.id.action_search)
         val searchView = myActionMenuItem.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 MainRepository.getFilter!!(query)
+                if (query != ""){
+                    binding.searchInform.visibility = View.VISIBLE
+                    binding.searchResultFor.text = "${getString(R.string.search_result_for_query)} '$query':"
+                }else{
+                    binding.searchResultFor.text = String()
+                    binding.searchInform.visibility = View.GONE
+                }
                 if (!searchView.isIconified()) {
                     searchView.setIconified(true)
                 }
@@ -113,24 +124,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             override fun onQueryTextChange(s: String): Boolean {
+
                 MainRepository.getFilter!!(s)
+                if (s != ""){
+                    binding.searchInform.visibility = View.VISIBLE
+                    binding.searchResultFor.text = "${getString(R.string.search_result_for_query)} '$s':"
+                }else{
+                    binding.searchResultFor.text = String()
+                    binding.searchInform.visibility = View.GONE
+                }
+
                 return false
             }
         })
-        MenuItemCompat.setOnActionExpandListener(
-            myActionMenuItem,
-            object : MenuItemCompat.OnActionExpandListener {
-                override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                    //Toast.makeText(this@MainActivity, "onMenuItemActionExpand called", Toast.LENGTH_SHORT).show()
-                    return true
-                }
 
-                override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                    Toast.makeText(this@MainActivity, "onMenutItemActionCollapse called", Toast.LENGTH_SHORT).show()
-                    //MainRepository.getFilter!!("")
-                    return true
-                }
-            })
         return true
 
     }
