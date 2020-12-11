@@ -13,7 +13,9 @@ import androidx.room.*
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("tag_id"),
         onDelete = ForeignKey.CASCADE,
-        onUpdate = ForeignKey.CASCADE))
+        onUpdate = ForeignKey.CASCADE)),
+        indices = [Index(value = ["recipe_id", "tag_id"],
+        unique = true)]
         )
 class RecipeTag(
     @PrimaryKey(autoGenerate = true) val id: Long?,

@@ -134,6 +134,7 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
     fun saveIngredient(_view: View){
         var view = _view as LinearLayout
         var title = (view.children.elementAt(indexTitle) as EditText).text.toString()
+        Log.d("mLog", "${(view.children.elementAt(indexAmount) as EditText).text.toString()}")
         var amount = (view.children.elementAt(indexAmount) as EditText).text.toString().toDouble()
         var unit = (view.children.elementAt(indexSpinner) as Spinner).selectedItem.toString()
 

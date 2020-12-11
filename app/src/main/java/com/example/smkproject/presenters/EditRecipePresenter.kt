@@ -60,6 +60,7 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
         val date = dateFormat.format(currentDate)
         recipe?.dateTime = date
+        recipe?.tags = recipe?.tags?.trim(' ', ',','\n') ?: ""
 
         if (!isSaveError()){
             launch {
