@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SMKProject</string>
     <string name="back_home">Назад</string>
-    <string name="add_recipe">Добавить рецепт</string>
+    <string name="add_recipe">Сохранить рецепт</string>
     <string name="amount_portions">Количество порций:</string>
     <string name="all_Recipes">Все рецепты</string>
     <string name="new_recipe">Новый рецепт</string>

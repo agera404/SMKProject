@@ -92,54 +92,69 @@ abstract class RecipeDao{
         }
         //update
         else {
-            recipe.id.let {idRecipe->
-                getById(idRecipe)?.let { oldRecipe ->
-                    recipe.convertTags()?.let { nTags ->
-                        oldRecipe?.convertTags()?.let { oTags ->
-                            for (oTag in oTags){
-                                for (nTag in nTags){
-                                    if (oTag.tag == nTag.tag) oTags.remove(oTag)
-                                }
-                            }
-                            for (oTag in oTags){
-                                MainRepository.db?.apply {
-                                    tagDao()?.reduceCount(oTag.id!!)
-                                    recipeTagDao()?.getByIdRecipes(oldRecipe.id!!)?.let {
-                                        for (i in it){
-                                            if (i.tag_id == oTag.id)  MainRepository.db?.recipeTagDao()?.delete(i)
-                                        }
+
+            recipe.id.run {
+                var oldRecipe = getById(this)
+                MainRepository.db?.apply {
+                    run {
+                        var nTags = oldRecipe?.convertTags()
+                        var oTags = oldRecipe?.convertTags()
+                        if (oTags != null && nTags != null) {
+                            var tempList :ArrayList<Tag> = arrayListOf()
+                            for (oTag in oTags) {
+                                for (nTag in nTags) {
+                                    if (oTag.tag == nTag.tag) {
+                                        tempList.add(oTag)
+                                        oTags.remove(oTag)
                                     }
                                 }
                             }
-                        }
-                        for (tag in nTags){
-                            MainRepository.db?.apply{
+                            for (oTag in oTags) {
+                                tagDao()?.reduceCount(oTag.id!!)
+                                recipeTagDao()?.getByIdRecipes(oldRecipe?.id!!)?.let {
+                                    for (i in it) {
+                                        if (i.tag_id == oTag.id) recipeTagDao()?.delete(i)
+                                    }
+                                }
+                            }
+                            var flag: Boolean = false
+                            for (tag in nTags){
                                 tagDao()?.insertOrUpdate(tag)?.let {idTag ->
-                                    //tagDao()?.increaseCount(idTag = idTag)
-                                    recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = idRecipe, tag_id = idTag))
+                                    for (t in tempList){
+                                        flag = if (tag.tag == t.tag) false else true
+                                    }
+                                    if (flag){
+                                        tagDao()?.increaseCount(idTag = idTag)
+                                        recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = recipe.id, tag_id = idTag))
+                                    }
+
                                 }
                             }
                         }
                     }
-                    recipe.convertIngredients()?.let { nIngredients ->
-                        oldRecipe.convertIngredients()?.let { oIngredients ->
-                            for (oIngredient in oIngredients){
-                                for (n in nIngredients){
-                                    if (oIngredient.title == n.title) oIngredients.remove(oIngredient)
+                    run {
+                        var nIngredients = recipe.convertIngredients()
+                        var oIngredients = oldRecipe?.convertIngredients()
+                        if (oIngredients != null && nIngredients != null) {
+                            for (oIngredient in oIngredients) {
+                                for (n in nIngredients) {
+                                    if (oIngredient.title == n.title) oIngredients.remove(
+                                        oIngredient
+                                    )
                                 }
                             }
-                            for (oIngredient in oIngredients){
-                                MainRepository.db?.recipeIngredientDao()?.getByIdRecipe(oldRecipe.id!!)?.let {
-                                    for (i in it){
-                                        if (i.ingredient_id == oIngredient.id)  MainRepository.db?.recipeIngredientDao()?.delete(i)
+                            for (oIngredient in oIngredients) {
+                                recipeIngredientDao()?.getByIdRecipe(oldRecipe?.id!!)?.let {
+                                    for (i in it) {
+                                        if (i.ingredient_id == oIngredient.id) recipeIngredientDao()?.delete(
+                                            i
+                                        )
                                     }
                                 }
                             }
-                        }
-                        for (ingredient in nIngredients){
-                            MainRepository.db?.apply {
+                            for (ingredient in nIngredients) {
                                 ingredientDao()?.insertOrUpdate(ingredient)?.let { idIngredient ->
-                                    recipeIngredientDao()?.insert(RecipeIngredient(id=null, recipe_id = idRecipe, ingredient_id = idIngredient))
+                                    recipeIngredientDao()?.insert(RecipeIngredient(id = null, recipe_id = recipe.id, ingredient_id = idIngredient))
                                 }
                             }
                         }

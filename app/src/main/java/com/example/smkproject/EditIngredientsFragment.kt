@@ -46,13 +46,10 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
     var amountET: EditText? = null //кол-во ингредиента
     var unitSpinner: Spinner? = null
     var delIngrButton: Button? = null //кнопка для удаения ингредиента
-    var countIngr: Int = 1 //считаем кол-во полей для ввода ингредиентов
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         presenter = EditIngredientsPresenter(this)
-
-
 
         ingredientET = (binding.listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexTitle) as EditText
         ingredientET?.addTextChangedListener(textWatcher)
@@ -63,7 +60,7 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
         unitSpinner = (binding.listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexSpinner) as Spinner
 
         delIngrButton = (binding.listIngredients.children.elementAt(0) as LinearLayout).children.elementAt(indexButt) as Button
-        delIngrButton?.setOnClickListener(this.clickListener)
+        delIngrButton?.setOnClickListener(onDeleteClick)
 
         addNewIngredientButton.setOnClickListener(clickListener)
         saveIngredientsButton.setOnClickListener(clickListener)
@@ -72,36 +69,45 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
             presenter!!.setIngredients()
         }
     }
+    var onDeleteClick = View.OnClickListener {v ->
+        var container = v.parent as ViewGroup
+        if ((container.parent as ViewGroup).childCount >1)
+            (container.parent as ViewGroup).removeView(container)
+    }
 
     var clickListener = View.OnClickListener { v ->
         when(v){
-            delIngrButton->{
-                (delIngrButton?.parent as ViewGroup).removeView(delIngrButton?.parent as ViewGroup)
-            }
             binding.addNewIngredientButton->{
                 newIngredientView()
             }
             binding.saveIngredientsButton->{
-                presenter?.ingredients = arrayListOf()
-                for (element in listIngredients.children){
-                    saveIngredient(element)
+                if (listIngredients.childCount > 2){
+                    presenter?.ingredients = arrayListOf()
+                    for (element in listIngredients.children){
+                        if(!saveIngredient(element)) return@OnClickListener
+                    }
+                    presenter?.onDestroy()
+                    findNavController().popBackStack(R.id.editRecipeFragment, false)
+                }else{
+                    Toast.makeText(context, "error", Toast.LENGTH_LONG).show()
                 }
-                presenter?.onDestroy()
-                findNavController().popBackStack(R.id.editRecipeFragment, false)
             }
         }
     }
     private var textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             if(ingredientET?.getText().hashCode() == s.hashCode()){
-
+                binding.saveIngredientsButton.isClickable = if (!ingredientET?.text.isNullOrBlank() && !amountET?.text.isNullOrBlank())  true else false
             }
             if(amountET?.getText().hashCode() == s.hashCode()){
-
+                binding.saveIngredientsButton.isClickable =
+                    if (!ingredientET?.text.isNullOrBlank() && !amountET?.text.isNullOrBlank()) true else false
             }
         }
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+        }
     }
 
 
@@ -124,22 +130,25 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
         amountET?.addTextChangedListener(textWatcher)
 
         delIngrButton = view.children.elementAt(indexButt) as Button
-        delIngrButton?.setOnClickListener(clickListener)
+        delIngrButton?.setOnClickListener(onDeleteClick)
 
         unitSpinner = view.children.elementAt(indexSpinner) as Spinner
-        countIngr += 1
         listIngredients.addView(view)
     }
 
-    fun saveIngredient(_view: View){
+    fun saveIngredient(_view: View): Boolean{
         var view = _view as LinearLayout
         var title = (view.children.elementAt(indexTitle) as EditText).text.toString()
-        Log.d("mLog", "${(view.children.elementAt(indexAmount) as EditText).text.toString()}")
-        var amount = (view.children.elementAt(indexAmount) as EditText).text.toString().toDouble()
+        var amount = (view.children.elementAt(indexAmount) as EditText).text.toString()
         var unit = (view.children.elementAt(indexSpinner) as Spinner).selectedItem.toString()
 
-
-        presenter?.ingredients?.add(Ingredient(null,title,amount,unit))
+        if (listIngredients.childCount > 2){
+            if (title.isNotEmpty() && title.isNotBlank() && title != "" && amount.isNotEmpty() && amount.isNotBlank()){
+                presenter?.ingredients?.add(Ingredient(null,title,amount.toDoubleOrNull() ?: 0.0,unit))
+                return true
+            }
+        }
+        return false
     }
     override fun loadIngredient(title: String, amount: Double, unit: String){
         ingredientET?.setText(title)

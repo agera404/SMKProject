@@ -52,10 +52,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navController!!.addOnDestinationChangedListener(OnDestinationChangedListener { controller, destination, arguments ->
             val bt= findViewById<ImageButton>(R.id.editRecipeMenuButton)
+
             if (destination.id == R.id.recipeFragment) {
                 bt.visibility = View.VISIBLE
+            } else if(destination.id == R.id.editRecipeFragment || destination.id == R.id.editIngredientsFragment){
+                //не работает!
+                searchView?.visibility = View.GONE
             } else{
                 bt.visibility = View.INVISIBLE
+                searchView?.visibility = View.VISIBLE
             }
         })
 
@@ -102,11 +107,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    var searchView: SearchView? = null
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
         val myActionMenuItem = menu!!.findItem(R.id.action_search)
-        val searchView = myActionMenuItem.actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView = myActionMenuItem.actionView as SearchView
+        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 MainRepository.getFilter!!(query)
                 if (query != ""){
@@ -116,9 +122,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     binding.searchResultFor.text = String()
                     binding.searchInform.visibility = View.GONE
                 }
-                if (!searchView.isIconified()) {
+
+                /*if (!searchView.isIconified()) {
                     searchView.setIconified(true)
-                }
+                }*/
                 myActionMenuItem.collapseActionView()
                 return false
             }
@@ -137,7 +144,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return false
             }
         })
-
         return true
 
     }
