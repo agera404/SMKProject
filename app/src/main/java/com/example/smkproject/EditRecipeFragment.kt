@@ -1,24 +1,23 @@
 package com.example.smkproject
 
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.MultiAutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.findNavController
 import com.example.smkproject.common.MainRepository
 import com.example.smkproject.databinding.FragmentEditRecipeBinding
-import com.example.smkproject.models.Recipe
 import com.example.smkproject.presenters.EditRecipePresenter
 import com.example.smkproject.presenters.ErrorSaveCode
 import com.example.smkproject.views.EditRecipeView
@@ -69,6 +68,11 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
             binding.ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
         }
     }
+    fun setFocus(et: EditText){
+        et.requestFocus();
+        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+    }
     val clickListener = View.OnClickListener {v ->
         when(v){
             binding.addRecipeButton ->{
@@ -81,15 +85,19 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
                     var text: String = ""
                     when(errorCode){
                         ErrorSaveCode.ERROR_TITLE ->{
+                            setFocus(binding.titleRecipeET)
                             text = "Set title"
                         }
                         ErrorSaveCode.ERROR_DESCRIBE ->{
+                            setFocus(binding.describRecipeET)
                             text = "Set describe"
                         }
                         ErrorSaveCode.ERROR_INGR ->{
+                            binding.addIngredientsButton.callOnClick()
                             text = "Set ingr"
                         }
                         ErrorSaveCode.ERROR_TAGS ->{
+                            setFocus(binding.editTags)
                             text = "Set tags"
                         }
                     }

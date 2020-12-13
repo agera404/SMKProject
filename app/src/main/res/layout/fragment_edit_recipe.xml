@@ -37,16 +37,24 @@
                 android:layout_height="wrap_content"
                 android:text="@string/edit_ingredients"
                 android:id="@+id/addIngredientsButton"/>
-
-
         </LinearLayout>
         <EditText
             android:id="@+id/describRecipeET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
-            android:lines="3"
+            android:lines="4"
             android:gravity="top|start"
+            android:scrollHorizontally="false"
+            android:overScrollMode="always"
+            android:scrollbarStyle="insideInset"
+            android:selectAllOnFocus="true"
+            android:foregroundGravity="top"
+            android:scrollbars="vertical"
+            android:editable="true"
+            android:enabled="true"
+            android:isScrollContainer="true"
+            android:focusable="true"
             android:hint="DESCRIPTION"
             />
         <LinearLayout

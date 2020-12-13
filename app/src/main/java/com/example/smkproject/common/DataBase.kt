@@ -20,8 +20,6 @@ abstract class DataBase : RoomDatabase() {
     abstract fun recipeIngredientDao(): RecipeIngredientDao
 
     companion object {
-        // Singleton prevents multiple instances of database opening at the
-        // same time.
         @Volatile
         private var INSTANCE: DataBase? = null
 

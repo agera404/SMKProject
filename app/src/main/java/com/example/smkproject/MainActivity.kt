@@ -123,9 +123,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     binding.searchInform.visibility = View.GONE
                 }
 
-                /*if (!searchView.isIconified()) {
-                    searchView.setIconified(true)
-                }*/
                 myActionMenuItem.collapseActionView()
                 return false
             }
@@ -148,8 +145,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-
-
     override fun updateMenu() {
         var menu = binding.navView.menu
         menu.removeGroup(1)
@@ -162,8 +157,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var tags = presenter.getTags()
         var menu = nav_view.menu
         if (tags.count()!! >0){
-            Log.d("mLog", "createMenu()")
-
             var subM0 = menu.addSubMenu(1,1,1,"Tags")
 
             for (t in tags){

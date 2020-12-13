@@ -60,7 +60,8 @@ class EditRecipePresenter(var view: EditRecipeView): BasePresenter() {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
         val date = dateFormat.format(currentDate)
         recipe?.dateTime = date
-        recipe?.tags = recipe?.tags?.trim(' ', ',','\n') ?: ""
+        val re = Regex("^[^\\p{L}\\p{N}].*?(?=[\\p{L}\\p{N}])|[^\\p{L}\\p{N}]*\$")
+        recipe?.tags = recipe?.tags?.replace(re,"")!!
 
         if (!isSaveError()){
             launch {

@@ -2,6 +2,7 @@ package com.example.smkproject
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -58,12 +59,25 @@ class RecipesFragment : Fragment(), RecipesView {
             findNavController().navigate(R.id.recipeFragment)
     }
     var longClickListener =  {pos: Int, recipe: Recipe ->
-        val items = arrayOf<CharSequence>(getString(R.string.delete_recipe))
+        val items = arrayOf<CharSequence>(getString(R.string.share),getString(R.string.delete_recipe))
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
         builder.setItems(items,
             DialogInterface.OnClickListener { dialog, item ->
-                presenter?.deleteRecipe(recipe.id!!)
-                adapter?.remove(pos)
+                when(item){
+                    0 ->{
+                        val shareIntent = Intent().apply{
+                            this.action = Intent.ACTION_SEND
+                            this.putExtra(Intent.EXTRA_TEXT,"${recipe.title} \n Ингердиенты:${recipe.ingredients} \n Описание:${recipe.describe}")
+                            this.type = "text/plaint"
+                        }
+                        startActivity(shareIntent)
+                    }
+                    1 ->{
+                        presenter?.deleteRecipe(recipe.id!!)
+                        adapter?.remove(pos)
+                    }
+                }
+
             })
         builder.show()
         true

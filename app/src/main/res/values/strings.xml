@@ -13,6 +13,8 @@
     <string name="delete_recipe">Удалить</string>
     <string name="hint_search">Поиск</string>
     <string name="search_result_for_query">"Результат поиска по запросу "</string>
+    <string name="share">"Поделиться "</string>
+
 
 
     <string-array name="unit">
