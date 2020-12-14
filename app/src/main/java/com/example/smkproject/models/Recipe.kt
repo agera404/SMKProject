@@ -1,11 +1,8 @@
 package com.example.smkproject.models
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.example.smkproject.common.MainRepository
-import java.lang.Exception
 
 
 @Entity(tableName = "recipes")
@@ -97,58 +94,59 @@ abstract class RecipeDao{
                 var oldRecipe = getById(this)
                 MainRepository.db?.apply {
                     run {
-                        var nTags = oldRecipe?.convertTags()
-                        var oTags = oldRecipe?.convertTags()
-                        if (oTags != null && nTags != null) {
-                            var tempList :ArrayList<Tag> = arrayListOf()
-                            for (oTag in oTags) {
-                                for (nTag in nTags) {
-                                    if (oTag.tag == nTag.tag) {
-                                        tempList.add(oTag)
-                                        oTags.remove(oTag)
-                                    }
-                                }
-                            }
-                            for (oTag in oTags) {
-                                tagDao()?.reduceCount(oTag.id!!)
-                                recipeTagDao()?.getByIdRecipes(oldRecipe?.id!!)?.let {
-                                    for (i in it) {
-                                        if (i.tag_id == oTag.id) recipeTagDao()?.delete(i)
-                                    }
-                                }
-                            }
-                            var flag: Boolean = false
-                            for (tag in nTags){
-                                tagDao()?.insertOrUpdate(tag)?.let {idTag ->
-                                    for (t in tempList){
-                                        flag = if (tag.tag == t.tag) false else true
-                                    }
-                                    if (flag){
-                                        tagDao()?.increaseCount(idTag = idTag)
-                                        recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = recipe.id, tag_id = idTag))
-                                    }
+                        var nTags = recipe?.convertTags()
+                        var tags = arrayListOf<Tag>()
 
+                        if (nTags != null) {
+                            oldRecipe?.convertTags()?.let { oTags ->
+                                var flag: Boolean = false
+                                for (oTag in oTags) {
+                                    for (nTag in nTags) {
+                                        flag = if (oTag.id == nTag.id || oTag.tag == nTag.tag) false else true
+                                    }
+                                    if (flag) tags.add(oTag)
                                 }
                             }
                         }
+
+                            for (oTag in tags) {
+                                tagDao()?.reduceCount(oTag.id!!)
+                                recipeTagDao()?.getByIdRecipes(oldRecipe?.id!!)?.let {
+                                    for (i in it) {
+                                        if (i.tag_id == oTag.id) {
+                                            recipeTagDao()?.delete(i)
+                                        }
+                                    }
+                                }
+                            }
+                            for (tag in nTags){
+                                tag.id.takeIf { it != null }.also {id ->
+                                    tagDao()?.insertOrUpdate(tag)?.also {id ->
+                                        tagDao()?.increaseCount(idTag = id)
+                                        recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = recipe.id, tag_id = id))
+                                    }
+                                }
+                            }
+
                     }
                     run {
                         var nIngredients = recipe.convertIngredients()
-                        var oIngredients = oldRecipe?.convertIngredients()
-                        if (oIngredients != null && nIngredients != null) {
-                            for (oIngredient in oIngredients) {
-                                for (n in nIngredients) {
-                                    if (oIngredient.title == n.title) oIngredients.remove(
-                                        oIngredient
-                                    )
+                        var ingredients = arrayListOf<Ingredient>()
+                        if (nIngredients != null) {
+                            var flag = false
+                            oldRecipe?.convertIngredients()?.let { oIngredients ->
+                                for (oIngredient in ingredients) {
+                                    for (n in nIngredients) {
+                                        flag = if(oIngredient.title == n.title || oIngredient.id == n.id) false else true
+                                    }
+                                    if (flag) ingredients.add(oIngredient)
                                 }
                             }
-                            for (oIngredient in oIngredients) {
+
+                            for (ingredient in ingredients) {
                                 recipeIngredientDao()?.getByIdRecipe(oldRecipe?.id!!)?.let {
                                     for (i in it) {
-                                        if (i.ingredient_id == oIngredient.id) recipeIngredientDao()?.delete(
-                                            i
-                                        )
+                                        if (i.ingredient_id == ingredient.id) recipeIngredientDao()?.delete(i)
                                     }
                                 }
                             }

@@ -121,7 +121,7 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
 
 
     //создаем новое пое для ингредиента
-    fun newIngredientView() {
+    private fun newIngredientView() {
         var view = LayoutInflater.from(context).inflate(R.layout.ingredient_container, null)
         ingredientET = (view as LinearLayout).children.elementAt(indexTitle) as EditText
         ingredientET?.addTextChangedListener(textWatcher)

@@ -55,18 +55,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             if (destination.id == R.id.recipeFragment) {
                 bt.visibility = View.VISIBLE
-            } else if(destination.id == R.id.editRecipeFragment || destination.id == R.id.editIngredientsFragment){
-                //не работает!
-                searchView?.visibility = View.GONE
-            } else{
+            }else{
                 bt.visibility = View.INVISIBLE
-                searchView?.visibility = View.VISIBLE
             }
         })
 
         toolbarBinding = binding.incToolbar
         toolbarBinding.openNavigationMenuButton.setOnClickListener(onClickListener)
-        toolbarBinding.editRecipeMenuButton.setOnClickListener(onClickListener)
+
         binding.resetFilterButton.setOnClickListener(onClickListener)
         MainRepository.currentIdTag = MainRepository.ID_TAG_ALLRECIPE
         binding.navView.setNavigationItemSelectedListener(this)
@@ -107,41 +103,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    var searchView: SearchView? = null
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
-        val myActionMenuItem = menu!!.findItem(R.id.action_search)
-        searchView = myActionMenuItem.actionView as SearchView
-        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                MainRepository.getFilter!!(query)
-                if (query != ""){
-                    binding.searchInform.visibility = View.VISIBLE
-                    binding.searchResultFor.text = "${getString(R.string.search_result_for_query)} '$query':"
-                }else{
-                    binding.searchResultFor.text = String()
-                    binding.searchInform.visibility = View.GONE
-                }
 
-                myActionMenuItem.collapseActionView()
-                return false
-            }
-
-            override fun onQueryTextChange(s: String): Boolean {
-
-                MainRepository.getFilter!!(s)
-                if (s != ""){
-                    binding.searchInform.visibility = View.VISIBLE
-                    binding.searchResultFor.text = "${getString(R.string.search_result_for_query)} '$s':"
-                }else{
-                    binding.searchResultFor.text = String()
-                    binding.searchInform.visibility = View.GONE
-                }
-
-                return false
-            }
-        })
-        return true
 
     }
 

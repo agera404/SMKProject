@@ -5,31 +5,46 @@
     android:layout_height="match_parent"
     tools:context=".EditIngredientsFragment"
     android:launchMode="singleTop">
-
     <LinearLayout
-        android:id="@+id/listIngredients"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
+        <include
+            layout="@layout/edit_toolbar"
+            android:id="@+id/inc_toolbar"
+            android:layout_height="60dp"
+            android:layout_width="match_parent" />
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        <LinearLayout
+            android:id="@+id/listIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <include layout="@layout/ingredient_container"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/addNewIngredientButton"
+        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_new_ingredient"
-            />
-        <Button
-            android:id="@+id/saveIngredientsButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/save_ingredients"
-            />
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/addNewIngredientButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_new_ingredient"
+                />
+            <Button
+                android:id="@+id/saveIngredientsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_ingredients"
+                />
+        </LinearLayout>
     </LinearLayout>
+
 
 </FrameLayout>

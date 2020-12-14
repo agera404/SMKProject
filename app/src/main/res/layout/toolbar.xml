@@ -28,15 +28,6 @@
                 />
 
 
-            <ImageButton
-                android:id="@+id/editRecipeMenuButton"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/ic_edit"
-                android:layout_gravity="end"
-                android:visibility="invisible"
-                />  
-
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

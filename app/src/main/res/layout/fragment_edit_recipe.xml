@@ -5,106 +5,115 @@
     android:layout_height="match_parent"
     tools:context=".EditRecipeFragment"
     android:launchMode="singleTop">
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-
-        <EditText
-            android:id="@+id/titleRecipeET"
+        <include
+            layout="@layout/edit_toolbar"
+            android:id="@+id/inc_toolbar"
+            android:layout_height="60dp"
+            android:layout_width="match_parent" />
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Title"
-            />
+            android:layout_height="match_parent"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <EditText
+                    android:id="@+id/titleRecipeET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Title"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ingredientsTVInEdtitRecipe"
+                        android:text="@string/please_add_ingredients"
+                        android:textColor="#FF0000"
+                        android:gravity="center"/>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit_ingredients"
+                        android:id="@+id/addIngredientsButton"
+                        android:onClick="onClick"/>
+                </LinearLayout>
+                <EditText
+                    android:id="@+id/describRecipeET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:lines="4"
+                    android:gravity="top|start"
+                    android:scrollHorizontally="false"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
+                    android:selectAllOnFocus="true"
+                    android:foregroundGravity="top"
+                    android:scrollbars="vertical"
+                    android:editable="true"
+                    android:enabled="true"
+                    android:isScrollContainer="true"
+                    android:focusable="true"
+                    android:hint="DESCRIPTION"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="@string/amount_portions"/>
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Portions"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+
+                <MultiAutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTags"
+                    android:completionThreshold="1"
+                    android:hint="Tags"
+                    android:clickable="true"
+                    android:onClick="onClick" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/ingredientsTVInEdtitRecipe"
-                android:text="@string/please_add_ingredients"
-                android:textColor="#FF0000"
-                android:gravity="center"/>
+            android:orientation="horizontal"
+            android:layout_gravity="bottom">
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/edit_ingredients"
-                android:id="@+id/addIngredientsButton"/>
-        </LinearLayout>
-        <EditText
-            android:id="@+id/describRecipeET"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:lines="4"
-            android:gravity="top|start"
-            android:scrollHorizontally="false"
-            android:overScrollMode="always"
-            android:scrollbarStyle="insideInset"
-            android:selectAllOnFocus="true"
-            android:foregroundGravity="top"
-            android:scrollbars="vertical"
-            android:editable="true"
-            android:enabled="true"
-            android:isScrollContainer="true"
-            android:focusable="true"
-            android:hint="DESCRIPTION"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
-                android:text="@string/amount_portions"/>
-            <EditText
+                android:layout_weight="1"
+                android:text="@string/add_recipe"
+                android:id="@+id/addRecipeButton"
+                android:onClick="onClick"
+                />
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Portions"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="@string/back_home"
+                android:id="@+id/backButton"
+                android:onClick="onClick"
+                />
         </LinearLayout>
-
-        <MultiAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editTags"
-            android:completionThreshold="1"
-            android:hint="Tags"/>
-
-
-
-
     </LinearLayout>
-</androidx.core.widget.NestedScrollView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/add_recipe"
-            android:id="@+id/addRecipeButton"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/back_home"
-            android:id="@+id/backButton"
-            />
-    </LinearLayout>
-
-
 </FrameLayout>

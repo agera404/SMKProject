@@ -48,10 +48,7 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
         super.onActivityCreated(savedInstanceState)
         presenter = EditRecipePresenter(this)
 
-        binding.addRecipeButton.setOnClickListener(clickListener)
-        binding.backButton.setOnClickListener(clickListener)
-        binding.addIngredientsButton.setOnClickListener(clickListener)
-        binding.editTags.setOnClickListener(clickListener)
+
         binding.titleRecipeET.addTextChangedListener(textWatcher)
         binding.describRecipeET.addTextChangedListener(textWatcher)
         binding.editTags.addTextChangedListener(textWatcher)
@@ -73,7 +70,7 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
-    val clickListener = View.OnClickListener {v ->
+    fun onClick(v: View?) {
         when(v){
             binding.addRecipeButton ->{
                 val errorCode = presenter?.saveRecipe()
@@ -123,15 +120,11 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
                 presenter?.recipe?.title  = binding.titleRecipeET.text.toString()
             }
             if(binding.describRecipeET.getText().hashCode() == s.hashCode()){
-
                 presenter?.recipe?.describe = describRecipeET.text.toString()
             }
             if(binding.editTags.getText().hashCode() == s.hashCode()){
-                var tags = binding.editTags.text.toString()
-                //drop last ','
-                presenter?.recipe?.tags = tags
+                presenter?.recipe?.tags = binding.editTags.text.toString()
             }
-
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
