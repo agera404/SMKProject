@@ -16,17 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             style="@style/Toolbar"
-            app:menu = "@menu/activity_main_toolbar"
             android:id="@+id/toolbar"
             >
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/ic_navigation"
-                android:id="@+id/openNavigationMenuButton"
-                android:layout_gravity="start"
-                />
-
 
 
         </androidx.appcompat.widget.Toolbar>

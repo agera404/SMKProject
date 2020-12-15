@@ -2,14 +2,15 @@ package com.example.smkproject
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavController.OnDestinationChangedListener
@@ -21,7 +22,6 @@ import com.example.smkproject.presenters.MainPresenter
 import com.example.smkproject.views.MainView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.toolbar.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,  MainView{
@@ -50,36 +50,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment!!.navController
 
-        navController!!.addOnDestinationChangedListener(OnDestinationChangedListener { controller, destination, arguments ->
-            val bt= findViewById<ImageButton>(R.id.editRecipeMenuButton)
-
-            if (destination.id == R.id.recipeFragment) {
-                bt.visibility = View.VISIBLE
-            }else{
-                bt.visibility = View.INVISIBLE
-            }
-        })
-
-        toolbarBinding = binding.incToolbar
-        toolbarBinding.openNavigationMenuButton.setOnClickListener(onClickListener)
+        toolbarBinding = binding.toolbarInc
 
         binding.resetFilterButton.setOnClickListener(onClickListener)
         MainRepository.currentIdTag = MainRepository.ID_TAG_ALLRECIPE
         binding.navView.setNavigationItemSelectedListener(this)
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar()?.setDisplayShowTitleEnabled(false);
+       // val mActionBarToolbar: Toolbar = findViewById<Toolbar>(R.id.toolbarInc)
+        //setSupportActionBar(mActionBarToolbar)
+        setSupportActionBar(findViewById<Toolbar>(R.id.toolbar));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.ic_navigation);
+            getSupportActionBar()?.setTitle("");
+        }
+        //getSupportActionBar()?.setDisplayShowTitleEnabled(false);
     }
 
     var onClickListener = View.OnClickListener { v ->
         when(v){
-            toolbarBinding.openNavigationMenuButton ->{
-                if(!drawerLayout.isDrawerOpen(Gravity.LEFT)) drawerLayout.openDrawer(Gravity.LEFT)
-                else drawerLayout.closeDrawer(Gravity.RIGHT)
-            }
-            toolbarBinding.editRecipeMenuButton ->{
-                navController?.navigate(R.id.editRecipeFragment)
-            }
             binding.resetFilterButton ->{
                 binding.searchResultFor.text = String()
                 binding.searchInform.visibility = View.GONE
@@ -103,11 +92,69 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home ->{
+                if(!drawerLayout.isDrawerOpen(Gravity.LEFT)) drawerLayout.openDrawer(Gravity.LEFT)
+                else drawerLayout.closeDrawer(Gravity.RIGHT)
+            }
+            R.id.action_editRecipe ->{
+                navController?.navigate(R.id.editRecipeFragment)
+            }
+            R.id.action_search ->{
+
+            }
+        }
+        return true
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
 
+        val myActionMenuItem = menu!!.findItem(R.id.action_search)
+        var searchView = myActionMenuItem.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                MainRepository.getFilter!!(query)
+                if (query != ""){
+                    binding.searchInform.visibility = View.VISIBLE
+                    binding.searchResultFor.text = "${getString(R.string.search_result_for_query)} '$query':"
+                }else{
+                    binding.searchResultFor.text = String()
+                    binding.searchInform.visibility = View.GONE
+                }
 
+                myActionMenuItem.collapseActionView()
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+
+                MainRepository.getFilter!!(s)
+                if (s != ""){
+                    binding.searchInform.visibility = View.VISIBLE
+                    binding.searchResultFor.text = "${getString(R.string.search_result_for_query)} '$s':"
+                }else{
+                    binding.searchResultFor.text = String()
+                    binding.searchInform.visibility = View.GONE
+                }
+
+                return false
+            }
+        })
+
+
+        navController!!.addOnDestinationChangedListener(OnDestinationChangedListener { controller, destination, arguments ->
+            val er= menu.findItem(R.id.action_editRecipe)
+            if (destination.id == R.id.recipeFragment) {
+                er.setVisible(true)
+                myActionMenuItem.setVisible(false)
+            }else{
+                er.setVisible(false)
+                myActionMenuItem.setVisible(true)
+            }
+        })
+        return true
     }
 
     override fun updateMenu() {
@@ -115,8 +162,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         menu.removeGroup(1)
         createMenu()
     }
-
-
 
     override fun createMenu(){
         var tags = presenter.getTags()

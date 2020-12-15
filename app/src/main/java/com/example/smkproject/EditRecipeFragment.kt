@@ -35,8 +35,7 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEditRecipeBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onDestroyView() {
@@ -70,7 +69,7 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
-    fun onClick(v: View?) {
+    fun onButtonClick(v: View?) {
         when(v){
             binding.addRecipeButton ->{
                 val errorCode = presenter?.saveRecipe()

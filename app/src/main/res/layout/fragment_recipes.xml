@@ -6,15 +6,7 @@
     tools:context=".RecipesFragment"
     android:id="@+id/recipesFragment"
     android:launchMode="singleTop">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <include
-            layout="@layout/toolbar"
-            android:id="@+id/inc_toolbar"
-            android:layout_height="60dp"
-            android:layout_width="match_parent" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +23,7 @@
                 android:padding="10dp"/>
             </androidx.core.widget.NestedScrollView>
         </LinearLayout>
-    </LinearLayout>
+
 
 
 
