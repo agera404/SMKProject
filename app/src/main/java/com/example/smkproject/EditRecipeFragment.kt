@@ -48,6 +48,9 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
         presenter = EditRecipePresenter(this)
 
 
+        binding.addIngredientsButton.setOnClickListener{view -> onButtonClick(view)}
+        binding.addRecipeButton.setOnClickListener{view -> onButtonClick(view)}
+        binding.backButton.setOnClickListener{view -> onButtonClick(view)}
         binding.titleRecipeET.addTextChangedListener(textWatcher)
         binding.describRecipeET.addTextChangedListener(textWatcher)
         binding.editTags.addTextChangedListener(textWatcher)
@@ -60,7 +63,15 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
             binding.titleRecipeET.setText(presenter!!.recipe?.title)
             binding.describRecipeET.setText(presenter!!.recipe?.describe)
             binding.editTags.setText(presenter!!.recipe?.tags)
-            binding.ingredientsTVInEdtitRecipe.setText(presenter!!.recipe?.ingredients)
+            var list = presenter!!.recipe?.convertIngredients()
+            var ingredients = String()
+            if (list != null) {
+                for (i in list){
+                    ingredients+="${list.indexOf(i)+1}) ${i.title}: ${i.amount} ${i.unit} \n"
+                }
+            }
+            ingredients = ingredients.dropLast(1)
+            binding.ingredientsTVInEdtitRecipe.setText(ingredients)
             binding.ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
         }
     }

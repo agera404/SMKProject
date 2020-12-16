@@ -8,7 +8,15 @@ class RecipePresenter(var view: RecipeView){
 
     var recipe = MainRepository.selectedRecipe
     fun loadRecipe() {
-        view.setField(recipe!!.title, recipe!!.describe, recipe!!.ingredients, recipe!!.tags)
+        var list = recipe?.convertIngredients()
+        var ingredients = String()
+        if (list != null) {
+            for (i in list){
+                ingredients+="${list.indexOf(i)+1}) ${i.title}: ${i.amount} ${i.unit} \n"
+            }
+        }
+        ingredients = ingredients.dropLast(1)
+        view.setField(recipe!!.title, recipe!!.describe, ingredients, recipe!!.tags)
     }
 
 }

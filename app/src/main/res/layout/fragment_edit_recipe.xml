@@ -32,13 +32,13 @@
                         android:id="@+id/ingredientsTVInEdtitRecipe"
                         android:text="@string/please_add_ingredients"
                         android:textColor="#FF0000"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:textAlignment="textStart"/>
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/edit_ingredients"
-                        android:id="@+id/addIngredientsButton"
-                        android:onClick="onClick"/>
+                        android:id="@+id/addIngredientsButton" />
                 </LinearLayout>
                 <EditText
                     android:id="@+id/describRecipeET"
@@ -81,8 +81,7 @@
                     android:id="@+id/editTags"
                     android:completionThreshold="1"
                     android:hint="Tags"
-                    android:clickable="true"
-                    android:onClick="onClick" />
+                    android:clickable="true" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
         <LinearLayout
@@ -96,7 +95,6 @@
                 android:layout_weight="1"
                 android:text="@string/add_recipe"
                 android:id="@+id/addRecipeButton"
-                android:onClick="onClick"
                 />
             <Button
                 android:layout_width="wrap_content"
@@ -104,7 +102,6 @@
                 android:layout_weight="1"
                 android:text="@string/back_home"
                 android:id="@+id/backButton"
-                android:onClick="onClick"
                 />
         </LinearLayout>
 </FrameLayout>

@@ -25,15 +25,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/ingredientTV"
+                    android:textSize="19dp"
                     />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/describTV"/>
+                    android:id="@+id/describTV"
+                    android:textSize="20dp"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:id="@+id/tagsTV"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

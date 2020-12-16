@@ -84,7 +84,8 @@ class EditIngredientsFragment : Fragment(), EditIngredientsView {
                 if (listIngredients.childCount > 2){
                     presenter?.ingredients = arrayListOf()
                     for (element in listIngredients.children){
-                        if(!saveIngredient(element)) return@OnClickListener
+                        if(!saveIngredient(element) && listIngredients.children.last() != element)
+                            return@OnClickListener
                     }
                     presenter?.onDestroy()
                     findNavController().popBackStack(R.id.editRecipeFragment, false)
