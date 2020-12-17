@@ -7,20 +7,22 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="searchViewStyle">@style/AppSearchViewStyle</item>
     </style>
-
+    <style name="ButtonTheme" parent="Widget.AppCompat.Button.Colored">
+        <item name="color">@color/colorAccent</item>
+    </style>
     <style name="Toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+<!--        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>-->
         <item name="android:background">@color/colorPrimary</item>
     </style>
     <style name="AppSearchViewStyle" parent="Widget.AppCompat.SearchView">
 <!--        <item name="android:textCursorDrawable">@drawable/white_cursor</item>-->
-        <item name="queryBackground">@android:color/transparent</item>
+<!--        <item name="queryBackground">@android:color/transparent</item>-->
         <item name="searchIcon">@drawable/ic_search</item>
 <!--        <item name="closeIcon">@drawable/icon_toolbar_clear</item>-->
         <item name="queryHint">@string/hint_search</item>
-        <item name="android:imeActionId">6</item>
+<!--        <item name="android:imeActionId">6</item>-->
     </style>
 
 </resources>

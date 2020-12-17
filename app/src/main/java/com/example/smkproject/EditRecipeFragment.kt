@@ -67,7 +67,7 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
             var ingredients = String()
             if (list != null) {
                 for (i in list){
-                    ingredients+="${list.indexOf(i)+1}) ${i.title}: ${i.amount} ${i.unit} \n"
+                    ingredients+="${list.indexOf(i)+1}. ${i.title}: ${i.amount} ${i.unit} \n"
                 }
             }
             ingredients = ingredients.dropLast(1)

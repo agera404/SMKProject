@@ -16,6 +16,7 @@ class MainPresenter (var view: MainView): BasePresenter() {
         }
 
         MainRepository.updateMenu = { view.updateMenu() }
+        MainRepository.updateToolbarTitle = {title -> view.updateToolbarTitle(title)}
 
     }
     fun getTags(): List<Tag>{

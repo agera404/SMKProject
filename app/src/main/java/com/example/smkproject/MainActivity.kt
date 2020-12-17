@@ -157,6 +157,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    override fun updateToolbarTitle(title: String) {
+        supportActionBar?.title = title
+    }
+
     override fun updateMenu() {
         var menu = binding.navView.menu
         menu.removeGroup(1)

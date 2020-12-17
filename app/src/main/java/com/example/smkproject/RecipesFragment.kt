@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.smkproject.common.MainRepository
 import com.example.smkproject.databinding.FragmentRecipesBinding
 import com.example.smkproject.models.Recipe
 import com.example.smkproject.presenters.RecipesPresenter
@@ -36,6 +37,7 @@ class RecipesFragment : Fragment(), RecipesView {
         binding.recipesLayout.layoutManager = llm
         adapter = RecipesAdapter(listRecipes = presenter!!.recipes!! as ArrayList<Recipe>, shortClickListener = { item: Recipe -> clickListener(item)}, longClickListener = { pos:Int, item: Recipe -> longClickListener(pos,item)})
         binding.recipesLayout.adapter = adapter
+        MainRepository.updateToolbarTitle?.invoke("Рецепты")
 
     }
 

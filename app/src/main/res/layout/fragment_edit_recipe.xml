@@ -38,7 +38,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/edit_ingredients"
-                        android:id="@+id/addIngredientsButton" />
+                        android:id="@+id/addIngredientsButton"
+                        style="@style/ButtonTheme"/>
                 </LinearLayout>
                 <EditText
                     android:id="@+id/describRecipeET"
@@ -95,6 +96,7 @@
                 android:layout_weight="1"
                 android:text="@string/add_recipe"
                 android:id="@+id/addRecipeButton"
+                style="@style/ButtonTheme"
                 />
             <Button
                 android:layout_width="wrap_content"
@@ -102,6 +104,7 @@
                 android:layout_weight="1"
                 android:text="@string/back_home"
                 android:id="@+id/backButton"
+                style="@style/ButtonTheme"
                 />
         </LinearLayout>
 </FrameLayout>

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.lifecycle.LifecycleOwner
+import com.example.smkproject.common.MainRepository
 import com.example.smkproject.databinding.FragmentRecipeBinding
 import com.example.smkproject.databinding.FragmentRecipesBinding
 import com.example.smkproject.models.Ingredient
@@ -42,6 +43,7 @@ class RecipeFragment : Fragment(), RecipeView {
         super.onActivityCreated(savedInstanceState)
         presenter = RecipePresenter(this)
         presenter!!.loadRecipe()
+        MainRepository.updateToolbarTitle?.invoke(presenter!!.recipe?.title?.toUpperCase()!!)
     }
 
     override fun setField(title: String, describ: String, ingredient: String, tags: String){
