@@ -1,11 +1,15 @@
 package com.example.smkproject
 
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -75,6 +79,8 @@ class EditRecipeFragment : Fragment(), EditRecipeView{
             binding.ingredientsTVInEdtitRecipe.setTextColor(Color.BLACK)
         }
     }
+
+
     fun setFocus(et: EditText){
         et.requestFocus();
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

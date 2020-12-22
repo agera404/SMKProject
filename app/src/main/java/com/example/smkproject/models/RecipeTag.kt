@@ -35,6 +35,6 @@ abstract class RecipeTagDao{
     abstract suspend fun delete(rt: RecipeTag)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun insert(recipeTag: RecipeTag)
+    abstract suspend fun insert(recipeTag: RecipeTag): Long
 
 }

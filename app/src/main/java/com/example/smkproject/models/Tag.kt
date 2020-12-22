@@ -38,10 +38,12 @@ abstract class TagDao{
     suspend fun insertOrUpdate(tag: Tag?): Long? {
         var item = getByTag(tag?.tag!!)
         if (item != null){
-            //increaseCount(item.id)
             return item.id
         }else{
-            return insert(tag)
+
+            var id = insert(tag)
+            increaseCount(id)
+            return id
         }
     }
 

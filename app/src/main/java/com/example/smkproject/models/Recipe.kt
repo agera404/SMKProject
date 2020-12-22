@@ -63,14 +63,13 @@ abstract class RecipeDao{
     suspend fun insert(recipe: Recipe?){
 
         var idRecipe: Long? = null
-        //insert
         if (recipe?.id == null) {
             MainRepository.db?.recipeDao()?.insertRecipe(recipe)?.let { idRecipe ->
                 recipe?.convertTags()?.let {tags ->
                     for (tag in tags){
                         MainRepository.db?.apply {
                             tagDao()?.insertOrUpdate(tag)?.let {idTag ->
-                                tagDao()?.increaseCount(idTag = idTag)
+                                //tagDao()?.increaseCount(idTag = idTag)
                                 recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = idRecipe, tag_id = idTag))
                             }
                         }
@@ -96,7 +95,6 @@ abstract class RecipeDao{
                     run {
                         var nTags = recipe?.convertTags()
                         var tags = arrayListOf<Tag>()
-
                         if (nTags != null) {
                             oldRecipe?.convertTags()?.let { oTags ->
                                 var flag: Boolean = false
@@ -122,7 +120,6 @@ abstract class RecipeDao{
                             for (tag in nTags){
                                 tag.id.takeIf { it != null }.also {id ->
                                     tagDao()?.insertOrUpdate(tag)?.also {id ->
-                                        tagDao()?.increaseCount(idTag = id)
                                         recipeTagDao()?.insert(RecipeTag(id=null, recipe_id = recipe.id, tag_id = id))
                                     }
                                 }

@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         presenter = MainPresenter(this)
         createMenu()
 
-        //binding.navHostFragment
+
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment!!.navController
 
@@ -56,15 +56,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         MainRepository.currentIdTag = MainRepository.ID_TAG_ALLRECIPE
         binding.navView.setNavigationItemSelectedListener(this)
 
-       // val mActionBarToolbar: Toolbar = findViewById<Toolbar>(R.id.toolbarInc)
-        //setSupportActionBar(mActionBarToolbar)
+
         setSupportActionBar(findViewById<Toolbar>(R.id.toolbar));
         if (getSupportActionBar() != null) {
             getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.ic_navigation);
             getSupportActionBar()?.setTitle("");
         }
-        //getSupportActionBar()?.setDisplayShowTitleEnabled(false);
+
+        
     }
 
     var onClickListener = View.OnClickListener { v ->
